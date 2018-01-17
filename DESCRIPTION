@@ -1,0 +1,10 @@
+Package: mytools
+Title: Stuff
+Version: 0.0.0.9000
+Authors@R: person("Alex", "Ilich", email = "ailich@mail.usf.edu", role = c("aut", "cre"))
+Description: Things.
+Depends: R (>= 3.4.1)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
