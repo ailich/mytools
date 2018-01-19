@@ -2,7 +2,7 @@
 % Please edit documentation in R/rPCA_cum_exp.R
 \name{rPCA_cum_exp}
 \alias{rPCA_cum_exp}
-\title{rPCA_cum_exp}
+\title{Cumulative Variation Explained Raster PCA}
 \usage{
 rPCA_cum_exp(raster_pca)
 }
