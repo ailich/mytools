@@ -1,4 +1,4 @@
-#' rPCA_cum_exp
+#' Cumulative Variation Explained Raster PCA
 #'
 #' Calculates cumulative variation explained from rasterPCA
 #' @param raster_pca output of rasterPCA function
