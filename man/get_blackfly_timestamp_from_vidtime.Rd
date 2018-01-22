@@ -2,19 +2,20 @@
 % Please edit documentation in R/get_blackfly_timestamp_from_vidtime.R
 \name{get_blackfly_timestamp_from_vidtime}
 \alias{get_blackfly_timestamp_from_vidtime}
-\title{Retrieves Blackfly Timestamp}
+\title{Returns Blackfly Timestamp based on Video Number and Seconds in}
 \usage{
-get_blackfly_timestamp_from_vidtime(hab, cam, video_col, seconds_col)
+get_blackfly_timestamp_from_vidtime(video_col, seconds_col, cam_timestamp,
+  cam_filepath)
 }
 \arguments{
-\item{hab}{habitat spreadsheet}
+\item{video_col}{vector of video numbers (must be same length as seconds_col)}
 
-\item{cam}{table of blackfly camera data}
+\item{seconds_col}{vector of seconds in video (must be same length as video_col)}
 
-\item{video_col}{column of video number in hab}
+\item{cam_timestamp}{vector of camera timestamps (must be same length as cam_filepath)}
 
-\item{seconds_col}{column of seconds in hab}
+\item{cam_filepath}{vector of filepaths from balckfly camera (must be same length as cam_timestamp)}
 }
 \description{
-Retrieves Blackfly Timestamp from approximate video time
+Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number and then mathc that frame number to a table to see when that frame was recorded.
 }

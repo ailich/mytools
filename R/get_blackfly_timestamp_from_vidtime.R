@@ -1,25 +1,26 @@
-#' Retrieves Blackfly Timestamp
+#' Returns Blackfly Timestamp based on Video Number and Seconds in
 #'
-#' Retrieves Blackfly Timestamp from approximate video time
-#' @param hab habitat spreadsheet
-#' @param cam table of blackfly camera data
-#' @param video_col column of video number in hab
-#' @param seconds_col column of seconds in hab
+#' Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number and then mathc that frame number to a table to see when that frame was recorded.
+#' @param video_col vector of video numbers (must be same length as seconds_col)
+#' @param seconds_col vector of seconds in video (must be same length as video_col)
+#' @param cam_timestamp vector of camera timestamps (must be same length as cam_filepath)
+#' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
 #' @import dplyr
 #' @import magrittr
 #' @import tibble
 #' @import stringr
 #' @export
 
-get_blackfly_timestamp_from_vidtime<- function(hab,cam,video_col,seconds_col){
-  names(hab)[c(video_col,seconds_col)]=c("video_num", "video_sec") #rename video and seconds columns
-  video<- cbind(hab[,video_col],hab[,seconds_col])
-  names(video)<- c("video_num", "video_sec")
-  video<- video %>% dplyr::mutate(frame_num=(video_num*720)+(video_sec*12)) #calculate approximate frame number
-  idx<- grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$file_path)
-  cam<- cam[idx,] #remove any rows without GigEGrabEx
-  cam<- cam %>% mutate(gigegrab= str_extract(file_path,"GigEGrabEx-[\\d]*")) %>% mutate(gigegrab_num=as.numeric(str_extract(gigegrab, "\\d+"))) %>% mutate(frame_num=gigegrab_num-gigegrab_num[1]) %>% select(-c(gigegrab, gigegrab_num)) #Extract frame number from filename accounting for if gigegrab_num doesn't start at 0
+get_blackfly_timestamp_from_vidtime<- function(video_col,seconds_col,cam_timestamp, cam_filepath){
+  video<- bind_cols(as.tibble(video_col),as.tibble(seconds_col))
+  names(video)<- c("video_col","seconds_col")
+  video<- video %>% dplyr::mutate(frame_num=(video_col*720)+(seconds_col*12)) #calculate approximate frame number
+  cam<- bind_cols(as.tibble(cam_timestamp), as.tibble(cam_filepath))
+  names(cam)<- c("cam_timestamp", "cam_filepath")
+  cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath)) #remove any rows without GigEGrabEx
+  cam<- cam %>% mutate(gigegrab= str_extract(cam$cam_filepath,"GigEGrabEx-[\\d]*"))
+  cam<- cam %>% mutate(gigegrab_num=as.numeric(str_extract(cam$gigegrab, "\\d+"))) %>% mutate(frame_num=gigegrab_num-gigegrab_num[1]) #Extract frame number from filename accounting for if gigegrab_num doesn't start at 0
   both<- left_join(video, cam, by="frame_num") #Join video and cam by frame number
-  output<- left_join(select(both,c(video_num, video_sec, timestamp)),hab,by=c("video_num","video_sec")) %>% filter(!is.na(timestamp)) %>% as.tibble() #Merge with hab table and remove rows where no timestamp
+  output<- both$cam_timestamp #Return vector of timestamps
   return(output)
 }
