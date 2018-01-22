@@ -1,14 +1,12 @@
 #' Percent Primary to Percent Hardbottom
 #'
-#' Converts Percent Primary to Percent Hardbottom
-#' @param my_data habitat spreadsheet
-#' @param indur_col column number of induration
-#' @param per_col column number of percent primary
+#' Takes a vector of Percent Primary Cover and outputs a vector of Percent Hardbottom
+#' @param indur_col vector of induration
+#' @param per_col vector of percent primary cover bins
 #' @keywords percent_cover
 #' @export
-perprim2perhard<- function(my_data,indur_col, per_col){
-  per<- my_data[,per_col][[1]]
-  bins<-unique(per)
+perprim2perhard<- function(indur_col, per_col){
+  bins<-unique(per_col)
   num_bins<- length(bins)
   inv_bins<- vector(mode = "character", length = num_bins) #Initialize vector
   for (i in 1:num_bins) {
@@ -17,13 +15,12 @@ perprim2perhard<- function(my_data,indur_col, per_col){
       inv_range<- rev(100-as.numeric(strsplit(x = bins[i],split = "-")[[1]])) #Inverts percentage
       inv_bins[i]<- paste(as.character(inv_range[1]), as.character(inv_range[2]), sep="-")
     }}
-  inv_per<- vector(mode = "character", length = length(per))
+  inv_per<- vector(mode = "character", length = length(per_col))
   for(i in 1:num_bins){
-    inv_per[per==bins[i]]<- inv_bins[i]
+    inv_per[per_col==bins[i]]<- inv_bins[i]
   } #Invert all bins in new data
-  idx<- grep(pattern = "Soft", x = my_data[,indur_col][[1]]) #Index of softbottom locations
-  output<- my_data
-  output[,per_col][[1]][idx]<- inv_per[idx] #Relace with inv_per only for Soft Bottom
-  names(output)[per_col]<- "Percent_Hardbottom"
-  return(output)
+  idx<- grep(pattern = "Soft", x = indur_col) #Index of softbottom locations
+  per_hard<- per_col
+  per_hard[idx]<- inv_per[idx] #Relace with inv_per only for Soft Bottom
+  return(per_hard)
 }

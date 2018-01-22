@@ -1,8 +1,8 @@
 #' Get Maximum Relief
 #'
-#' Returns maximum of primary and secondary releif. Acceptable values for relief include "None", "Covered_Low_Relief_Hard_Bottom","Semi_Exposed_Low_Relief_Hard_Bottom","Low_Relief_Hard_Bottom","High_Relief_Hard_Bottom",and "Pinnacle"
-#' @param p_relief column of prelief data
-#' @param s_relief column of secondary relief data
+#' Returns a vector of maxium relief based on primary and secondary releif. Acceptable values for relief include "None", "Covered_Low_Relief_Hard_Bottom","Semi_Exposed_Low_Relief_Hard_Bottom","Low_Relief_Hard_Bottom","High_Relief_Hard_Bottom",and "Pinnacle." Length of inputs must match.
+#' @param p_relief vector of prelief data
+#' @param s_relief vector of secondary relief data
 #' @keywords relief
 #' @export
 

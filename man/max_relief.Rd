@@ -7,11 +7,11 @@
 max_relief(p_relief, s_relief)
 }
 \arguments{
-\item{p_relief}{column of prelief data}
+\item{p_relief}{vector of prelief data}
 
-\item{s_relief}{column of secondary relief data}
+\item{s_relief}{vector of secondary relief data}
 }
 \description{
-Returns maximum of primary and secondary releif. Acceptable values for relief include "None", "Covered_Low_Relief_Hard_Bottom","Semi_Exposed_Low_Relief_Hard_Bottom","Low_Relief_Hard_Bottom","High_Relief_Hard_Bottom",and "Pinnacle"
+Returns a vector of maxium relief based on primary and secondary releif. Acceptable values for relief include "None", "Covered_Low_Relief_Hard_Bottom","Semi_Exposed_Low_Relief_Hard_Bottom","Low_Relief_Hard_Bottom","High_Relief_Hard_Bottom",and "Pinnacle." Length of inputs must match.
 }
 \keyword{relief}

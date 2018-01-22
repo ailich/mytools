@@ -4,16 +4,14 @@
 \alias{perprim2perhard}
 \title{Percent Primary to Percent Hardbottom}
 \usage{
-perprim2perhard(my_data, indur_col, per_col)
+perprim2perhard(indur_col, per_col)
 }
 \arguments{
-\item{my_data}{habitat spreadsheet}
+\item{indur_col}{vector of induration}
 
-\item{indur_col}{column number of induration}
-
-\item{per_col}{column number of percent primary}
+\item{per_col}{vector of percent primary cover bins}
 }
 \description{
-Converts Percent Primary to Percent Hardbottom
+Takes a vector of Percent Primary Cover and outputs a vector of Percent Hardbottom
 }
 \keyword{percent_cover}
