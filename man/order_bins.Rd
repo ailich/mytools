@@ -2,13 +2,13 @@
 % Please edit documentation in R/order_bins.R
 \name{order_bins}
 \alias{order_bins}
-\title{Order Percent Cover Bins}
+\title{Order Percent Cover Bins and gives their corresponding frequency}
 \usage{
-order_bins(bins)
+order_bins(percent_cover)
 }
 \arguments{
-\item{bins}{vector of bin ranges}
+\item{percent_cover}{a character vector of percent cover data in ranges formatted as "lower-upper"}
 }
 \description{
-Orders Percent Cover Bins in ascending order based on lower range
+Returns a tibbe of ordered percent cover bins and their corresponding frequency. Percent Cover Bins are ordered in ascending order based on lower range. Ties are broken by upper range.
 }

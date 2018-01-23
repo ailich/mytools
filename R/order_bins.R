@@ -1,18 +1,24 @@
-#' Order Percent Cover Bins
+#' Order Percent Cover Bins and gives their corresponding frequency
 #'
-#' Orders Percent Cover Bins in ascending order based on lower range
-#' @param bins vector of bin ranges
+#' Returns a tibbe of ordered percent cover bins and their corresponding frequency. Percent Cover Bins are ordered in ascending order based on lower range. Ties are broken by upper range.
+#' @param percent_cover a character vector of percent cover data in ranges formatted as "lower-upper"
 #' @export
-order_bins<- function(bins){
-  num_bins<- length(bins)
+
+order_bins<- function(percent_cover){
+  bins_count<- as.tibble(table(percent_cover))
+  names(bins_count)<- c("bins","count")
+  num_bins<- NROW(bins_count)
   low_range<- vector(mode = "numeric",length = num_bins) #Dimension variable
   low_range[1:num_bins]<- NA #Set initial values to NA
+  high_range<- vector(mode = "numeric",length = num_bins) #Dimension variable
+  high_range[1:num_bins]<- NA #Set initial values to NA
   for (i in 1:num_bins) {
-    if (bins[i]=="100") {low_range[i]=100}
-    else{
-      low_range[i]<- as.numeric(strsplit(x = bins[i], split ="-")[[1]][1])
-    }}
-  both<- cbind(as.data.frame(bins), as.data.frame(low_range))
-  output<- arrange(both, by=low_range)[,1]
+    low_range[i]<- as.numeric(strsplit(x = bins_count$bins[i], split ="-")[[1]][1])
+    high_range[i]<- as.numeric(strsplit(x = bins_count$bins[i], split ="-")[[1]][2])
+  }
+  bins_count<- bins_count %>% bind_cols(as.tibble(low_range)) %>% bind_cols(as.tibble(high_range))
+  names(bins_count)[c(3,4)]<- c("low_range","high_range")
+  bins_count
+  output<- arrange(bins_count, by=low_range, by=high_range) %>% select(bins, count)
   return(output)
 }
