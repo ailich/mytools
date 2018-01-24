@@ -18,7 +18,6 @@ order_bins<- function(percent_cover){
   }
   bins_count<- bins_count %>% bind_cols(as.tibble(low_range)) %>% bind_cols(as.tibble(high_range))
   names(bins_count)[c(3,4)]<- c("low_range","high_range")
-  bins_count
   output<- arrange(bins_count, by=low_range, by=high_range) %>% select(bins, count)
   return(output)
 }
