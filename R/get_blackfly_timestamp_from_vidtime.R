@@ -7,14 +7,13 @@
 #' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
 #' @import dplyr
 #' @import magrittr
-#' @import tibble
 #' @import stringr
 
 get_blackfly_timestamp_from_vidtime_1<- function(video_col,seconds_col,cam_timestamp, cam_filepath){
-  video<- bind_cols(as.tibble(video_col),as.tibble(seconds_col))
+  video<- bind_cols(as_tibble(video_col),as_tibble(seconds_col))
   names(video)<- c("video_col","seconds_col")
   video<- video %>% dplyr::mutate(frame_num=(video_col*720)+(seconds_col*12)) #calculate approximate frame number
-  cam<- bind_cols(as.tibble(cam_timestamp), as.tibble(cam_filepath))
+  cam<- bind_cols(as_tibble(cam_timestamp), as_tibble(cam_filepath))
   names(cam)<- c("cam_timestamp", "cam_filepath")
   cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath)) #remove any rows without GigEGrabEx
   cam<- cam %>% mutate(gigegrab= str_extract(cam$cam_filepath,"GigEGrabEx-[\\d]*"))
@@ -33,14 +32,13 @@ get_blackfly_timestamp_from_vidtime_1<- function(video_col,seconds_col,cam_times
 #' @param cam_filepath vector of filepaths from blackfly camera (must be same length as cam_timestamp)
 #' @import dplyr
 #' @import magrittr
-#' @import tibble
 #' @import stringr
 
 get_blackfly_timestamp_from_vidtime_2<- function(video_col,seconds_col,cam_timestamp, cam_filepath){
-  video<- bind_cols(as.tibble(video_col),as.tibble(seconds_col))
+  video<- bind_cols(as_tibble(video_col),as_tibble(seconds_col))
   names(video)<- c("video_col","seconds_col")
   video<- video %>% dplyr::mutate(frame_num=(video_col*720)+(seconds_col*12)) #calculate approximate frame number
-  cam<- bind_cols(as.tibble(cam_timestamp), as.tibble(cam_filepath))
+  cam<- bind_cols(as_tibble(cam_timestamp), as_tibble(cam_filepath))
   names(cam)<- c("cam_timestamp", "cam_filepath")
   cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath)) #remove any rows without GigEGrabEx
   cam<- cam %>% mutate(frame_num=0:(nrow(cam)-1)) #Increase frame by 1 with row
@@ -55,7 +53,6 @@ get_blackfly_timestamp_from_vidtime_2<- function(video_col,seconds_col,cam_times
 #' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
 #' @import dplyr
 #' @import magrittr
-#' @import tibble
 #' @import stringr
 check_if_reset<- function(cam_filepath){
   cam<- tibble(cam_filepath=cam_filepath)
@@ -78,7 +75,6 @@ check_if_reset<- function(cam_filepath){
 #' @param cam_filepath vector of filepaths from blackfly camera (must be same length as cam_timestamp)
 #' @import dplyr
 #' @import magrittr
-#' @import tibble
 #' @import stringr
 #' @export
 

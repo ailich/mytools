@@ -6,13 +6,16 @@
 #' @prop_val proportion of samples to be used in validation
 #' @seed sampling is initiated by set.seed(seed) if input is not NULL. This will generate consistent results
 #' @export
+#' @import dplyr
+#' @import magrittr
+#' @import tibble
 
 train_val<- function(my_data, hab_col, prop_val, seed=NULL){
-  isadataframe<- is.data.frame(my_data) & !is.tibble(my_data)
-  isatibble<- is.tibble(my_data)
+  isadataframe<- is.data.frame(my_data) & !is_tibble(my_data)
+  isatibble<- is_tibble(my_data)
   isaspdf<- (class(my_data)=="SpatialPointsDataFrame")[1]
   if (isaspdf){prj4_str<- my_data@proj4string} #Save prj4 string
-  if (isadataframe|isaspdf){my_data<- as.tibble(my_data)} #Convert to tibble
+  if (isadataframe|isaspdf){my_data<- as_tibble(my_data)} #Convert to tibble
   og_name<-names(my_data)[hab_col] #store for later
   names(my_data)[hab_col]<-"hab_type"
   my_data<- my_data %>% mutate(Row_ID=1:NROW(my_data)) #Primary key for all tables
