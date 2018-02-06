@@ -14,8 +14,8 @@ get_blackfly_timestamp_from_vidtime(video_col, seconds_col, cam_timestamp,
 
 \item{cam_timestamp}{vector of camera timestamps (must be same length as cam_filepath)}
 
-\item{cam_filepath}{vector of filepaths from balckfly camera (must be same length as cam_timestamp)}
+\item{cam_filepath}{vector of filepaths from blackfly camera (must be same length as cam_timestamp)}
 }
 \description{
-Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number and then mathc that frame number to a table to see when that frame was recorded.
+Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number and then match that frame number to a table to see when that frame was recorded. Timestamps and filepaths vectors must correspond to eachother and be in the order that the frames were recorded
 }
