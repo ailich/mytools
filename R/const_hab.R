@@ -2,7 +2,7 @@
 #'
 #' Returns only observations where the habitat classes were the same as their previous and subsequent observations. Useful for training algorithmns b/c reduces effect of positional uncertainty. Will return a dataframe if a dataframe is input. Will return a tibble if a tibble is input.
 #' @param my_data a tibble or dataframe containing all data
-#' @param hab_column number specifying the column to check
+#' @param hab_col number specifying the column to check
 #' @export
 
 const_hab<- function(my_data, hab_col){
