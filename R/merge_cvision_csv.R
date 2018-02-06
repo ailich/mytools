@@ -33,8 +33,8 @@ merge_cvision_csv<- function(file_list=NULL, frames_per_sec, vid_length){
   fish<- fish %>% select(file_name, Reviewer, Fish_Number, Fish_Type, Time_In_Video, Frame)
   fish<- fish %>% mutate(video= as.numeric(str_extract(string = file_name,pattern = "\\d+")))
   fish<- fish %>% mutate(Total_Frame= video*(frames_per_sec*(vid_length*60))+Frame)
-  fish<- fish %>% mutate(Total_Time= (video*(vid_length*60))+Time_In_Video)
-  fish<- fish %>% select(file_name,video,Reviewer,Fish_Number,Fish_Type,Time_In_Video, Frame, Total_Time, Total_Frame)
+  fish<- fish %>% mutate(Total_Time_In= (video*(vid_length*60))+Time_In_Video)
+  fish<- fish %>% select(file_name,video,Reviewer,Fish_Number,Fish_Type,Time_In_Video, Frame, Total_Time_In, Total_Frame)
   return(fish)
   }
 
