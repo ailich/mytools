@@ -5,7 +5,7 @@
 \title{Returns Blackfly Timestamp based on Video Number and Seconds in}
 \usage{
 get_blackfly_timestamp_from_vidtime(video_col, seconds_col, cam_timestamp,
-  cam_filepath)
+  cam_filepath, test = FALSE)
 }
 \arguments{
 \item{video_col}{vector of video numbers (must be same length as seconds_col)}
@@ -14,8 +14,10 @@ get_blackfly_timestamp_from_vidtime(video_col, seconds_col, cam_timestamp,
 
 \item{cam_timestamp}{vector of camera timestamps (must be same length as cam_filepath)}
 
-\item{cam_filepath}{vector of filepaths from blackfly camera (must be same length as cam_timestamp)}
+\item{cam_filepath}{vector of filepaths from balckfly camera (must be same length as cam_timestamp)}
+
+\item{test}{if TRUE output will be a tibble that can be used to check if the function is working correctly}
 }
 \description{
-Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using video Number and seconds in frame number and then match that frame number to a table to see when that frame was recorded. If the camera was reset at some point, frame number will start at 0 and increment by one each observation from the camera. Timestamps and filepaths vectors must correspond to eachother.
+Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number and then mathc that frame number to a table to see when that frame was recorded.
 }

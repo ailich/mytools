@@ -14,16 +14,16 @@ merge_cvision_csv<- function(file_list=NULL, frames_per_sec, vid_length){
   if(is.null(file_list)){file_list<- list.files(pattern = "\\.csv$")}
   new_file_list<- rep(x = NA_character_,length(file_list)) #Initialize new file list
   for (i in 1:length(file_list)) {
-    fish_file<- read_csv(file_list[i])
+    fish_file<- suppressWarnings(suppressMessages(read_csv(file_list[i])))
     if (nrow(fish_file)>0) {new_file_list[i]<- file_list[i]}
     rm(i,fish_file)
   }
   new_file_list<- new_file_list[!is.na(new_file_list)] #Create a new file list of only ones that contain fish
 
-  fish<- read_csv(file = new_file_list[1])
+  fish<- suppressWarnings(suppressMessages(read_csv(file = new_file_list[1])))
   fish<- fish %>% mutate(file_name= new_file_list[1])
-  for (i in 2:length(new_file_list)) {
-    new_fish<- read_csv(new_file_list[i])
+  for (i in 2:length(new_file_list)){
+    new_fish<- suppressWarnings(suppressMessages(read_csv(new_file_list[i])))
     new_fish<- new_fish[,1:9]
     new_fish<- new_fish %>% mutate(file_name= new_file_list[i])
     fish<- bind_rows(fish,new_fish)
@@ -31,7 +31,14 @@ merge_cvision_csv<- function(file_list=NULL, frames_per_sec, vid_length){
   }
 
   fish<- fish %>% select(file_name, Reviewer, Fish_Number, Fish_Type, Time_In_Video, Frame)
-  fish<- fish %>% mutate(video= as.numeric(str_extract(string = file_name,pattern = "\\d+")))
+  fish$short_filename<- NA_character_
+  for (i in 1:nrow(fish)) {
+    idx<- gregexpr("\\/", fish$file_name[i])[[1]]
+    start_pos<- idx[length(idx)]+1
+    end_pos<- nchar(fish$file_name[i])
+    fish$short_filename[i]<-substr(x = fish$file_name[i], start = start_pos, stop=end_pos)
+  }
+  fish<- fish %>% mutate(video= as.numeric(str_extract(string = short_filename,pattern = "\\d+")))
   fish<- fish %>% mutate(Total_Frame= video*(frames_per_sec*(vid_length*60))+Frame)
   fish<- fish %>% mutate(Total_Time_In= (video*(vid_length*60))+Time_In_Video)
   fish<- fish %>% select(file_name,video,Reviewer,Fish_Number,Fish_Type,Time_In_Video, Frame, Total_Time_In, Total_Frame)

@@ -19,7 +19,7 @@ get_blackfly_timestamp_from_vidtime_1<- function(video_col,seconds_col,cam_times
   cam<- cam %>% mutate(gigegrab= str_extract(cam$cam_filepath,"GigEGrabEx-[\\d]*"))
   cam<- cam %>% mutate(gigegrab_num=as.numeric(str_extract(cam$gigegrab, "\\d+"))) %>% mutate(frame_num=gigegrab_num-gigegrab_num[1]) #Extract frame number from filename accounting for if gigegrab_num doesn't start at 0
   both<- left_join(video, cam, by="frame_num") #Join video and cam by frame number
-  output<- both$cam_timestamp #Return vector of timestamps
+  output<- both
   return(output)
 }
 
@@ -43,7 +43,7 @@ get_blackfly_timestamp_from_vidtime_2<- function(video_col,seconds_col,cam_times
   cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath)) #remove any rows without GigEGrabEx
   cam<- cam %>% mutate(frame_num=0:(nrow(cam)-1)) #Increase frame by 1 with row
   both<- left_join(video, cam, by="frame_num") #Join video and cam by frame number
-  output<- both$cam_timestamp #Return vector of timestamps
+  output<- both
   return(output)
 }
 
@@ -79,13 +79,17 @@ check_if_reset<- function(cam_filepath){
 #' @export
 
 get_blackfly_timestamp_from_vidtime<- function(video_col,seconds_col,cam_timestamp, cam_filepath){
-was_reset<- check_if_reset(cam_filepath)
-if(!was_reset){
-  output1<-get_blackfly_timestamp_from_vidtime_1(video_col,seconds_col,cam_timestamp, cam_filepath)
-  output2<- get_blackfly_timestamp_from_vidtime_2(video_col,seconds_col,cam_timestamp, cam_filepath)
-  if(!identical(output1,output2)){warning("Something may have went wrong")}
+  was_reset<- check_if_reset(cam_filepath)
+  if(!was_reset){
+    output1<-get_blackfly_timestamp_from_vidtime_1(video_col,seconds_col,cam_timestamp, cam_filepath)
+    output2<- get_blackfly_timestamp_from_vidtime_2(video_col,seconds_col,cam_timestamp, cam_filepath)
+    if(test==FALSE){
+        output1<- output1$cam_timestamp
+        output2<- output2$cam_timestamp}
+  if(!identical(output1$cam_timestamp,output2$cam_timestamp)){warning("Something may have went wrong")}
   return(output1)
 }
-if(was_reset){output= get_blackfly_timestamp_from_vidtime_2(video_col,seconds_col,cam_timestamp, cam_filepath)
-warning("Camera was reset. Timestamps aquired using alternative method")
-return(output)}}
+  if(was_reset){output= get_blackfly_timestamp_from_vidtime_2(video_col,seconds_col,cam_timestamp, cam_filepath)
+  warning("Camera was reset. Timestamps aquired using alternative method")
+  if(test==FALSE){output<- output$cam_timestamp}
+  return(output)}}
