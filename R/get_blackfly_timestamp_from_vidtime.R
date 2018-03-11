@@ -1,15 +1,21 @@
 #' Returns Blackfly Timestamp based on Video Number and Seconds in
 #'
-#' Frame number is grabbed from gigegrab and adjusted based on gigegrab number in first frame
+#' Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number and then mathc that frame number to a table to see when that frame was recorded.
 #' @param video_col vector of video numbers (must be same length as seconds_col)
 #' @param seconds_col vector of seconds in video (must be same length as video_col)
 #' @param cam_timestamp vector of camera timestamps (must be same length as cam_filepath)
 #' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
+#' @param test if TRUE output will be a tibble that can be used to check if the function is working correctly
 #' @import dplyr
 #' @import magrittr
+#' @import tibble
 #' @import stringr
+#' @export
 
-get_blackfly_timestamp_from_vidtime_1<- function(video_col,seconds_col,cam_timestamp, cam_filepath){
+get_blackfly_timestamp_from_vidtime<- function(video_col,seconds_col,cam_timestamp, cam_filepath, test=FALSE){
+  if (check_if_reset(cam_filepath)) {
+    message("Error: camera was reset")
+    stop()}
   video<- bind_cols(as_tibble(video_col),as_tibble(seconds_col))
   names(video)<- c("video_col","seconds_col")
   video<- video %>% dplyr::mutate(frame_num=(video_col*720)+(seconds_col*12)) #calculate approximate frame number
@@ -18,78 +24,10 @@ get_blackfly_timestamp_from_vidtime_1<- function(video_col,seconds_col,cam_times
   cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath)) #remove any rows without GigEGrabEx
   cam<- cam %>% mutate(gigegrab= str_extract(cam$cam_filepath,"GigEGrabEx-[\\d]*"))
   cam<- cam %>% mutate(gigegrab_num=as.numeric(str_extract(cam$gigegrab, "\\d+"))) %>% mutate(frame_num=gigegrab_num-gigegrab_num[1]) #Extract frame number from filename accounting for if gigegrab_num doesn't start at 0
+  cam<- cam %>% mutate(frame_num_check=0:(nrow(cam)-1)) #Frame numbers just incremented by 1
+  if(sum(cam$frame_num!=cam$frame_num_check)!=0){warning("Something may have went wrong")} #Check both methods of getting frame match
   both<- left_join(video, cam, by="frame_num") #Join video and cam by frame number
-  output<- both
+  if(test){output=both #Return tibble
+    } else{output<- both$cam_timestamp} #Return vector of timestamps
   return(output)
 }
-
-#' Returns Blackfly Timestamp based on Video Number and Seconds in
-#'
-#' Frame number starts at 0 and increases by 1. This is a backup in case camera is restarted mid-transect, and is used as a check
-#' @param video_col vector of video numbers (must be same length as seconds_col)
-#' @param seconds_col vector of seconds in video (must be same length as video_col)
-#' @param cam_timestamp vector of camera timestamps (must be same length as cam_filepath)
-#' @param cam_filepath vector of filepaths from blackfly camera (must be same length as cam_timestamp)
-#' @import dplyr
-#' @import magrittr
-#' @import stringr
-
-get_blackfly_timestamp_from_vidtime_2<- function(video_col,seconds_col,cam_timestamp, cam_filepath){
-  video<- bind_cols(as_tibble(video_col),as_tibble(seconds_col))
-  names(video)<- c("video_col","seconds_col")
-  video<- video %>% dplyr::mutate(frame_num=(video_col*720)+(seconds_col*12)) #calculate approximate frame number
-  cam<- bind_cols(as_tibble(cam_timestamp), as_tibble(cam_filepath))
-  names(cam)<- c("cam_timestamp", "cam_filepath")
-  cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath)) #remove any rows without GigEGrabEx
-  cam<- cam %>% mutate(frame_num=0:(nrow(cam)-1)) #Increase frame by 1 with row
-  both<- left_join(video, cam, by="frame_num") #Join video and cam by frame number
-  output<- both
-  return(output)
-}
-
-#' Checks if camera has been restarted during transect
-#'
-#' Does that by checking if gigegrab number from file decreases at any point
-#' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
-#' @import dplyr
-#' @import magrittr
-#' @import stringr
-check_if_reset<- function(cam_filepath){
-  cam<- tibble(cam_filepath=cam_filepath)
-  cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath))
-  cam<- cam %>% mutate(gigegrab= str_extract(cam$cam_filepath,"GigEGrabEx-[\\d]*"))
-  cam<- cam %>% mutate(gigegrab_num=as.numeric(str_extract(cam$gigegrab, "\\d+")))
-  cam<- cam %>% mutate(reset=FALSE)
-  for ( i in 2:nrow(cam)){
-    if(cam$gigegrab_num[i]<=cam$gigegrab_num[i-1]){cam$reset[i]<- TRUE}
-  }
-  output<- sum(cam$reset)>0 #Outputs whether camera has been reset
-}
-
-#' Returns Blackfly Timestamp based on Video Number and Seconds in
-#'
-#' Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using video Number and seconds in frame number and then match that frame number to a table to see when that frame was recorded. If the camera was reset at some point, frame number will start at 0 and increment by one each observation from the camera. Timestamps and filepaths vectors must correspond to eachother.
-#' @param video_col vector of video numbers (must be same length as seconds_col)
-#' @param seconds_col vector of seconds in video (must be same length as video_col)
-#' @param cam_timestamp vector of camera timestamps (must be same length as cam_filepath)
-#' @param cam_filepath vector of filepaths from blackfly camera (must be same length as cam_timestamp)
-#' @import dplyr
-#' @import magrittr
-#' @import stringr
-#' @export
-
-get_blackfly_timestamp_from_vidtime<- function(video_col,seconds_col,cam_timestamp, cam_filepath){
-  was_reset<- check_if_reset(cam_filepath)
-  if(!was_reset){
-    output1<-get_blackfly_timestamp_from_vidtime_1(video_col,seconds_col,cam_timestamp, cam_filepath)
-    output2<- get_blackfly_timestamp_from_vidtime_2(video_col,seconds_col,cam_timestamp, cam_filepath)
-    if(test==FALSE){
-        output1<- output1$cam_timestamp
-        output2<- output2$cam_timestamp}
-  if(!identical(output1$cam_timestamp,output2$cam_timestamp)){warning("Something may have went wrong")}
-  return(output1)
-}
-  if(was_reset){output= get_blackfly_timestamp_from_vidtime_2(video_col,seconds_col,cam_timestamp, cam_filepath)
-  warning("Camera was reset. Timestamps aquired using alternative method")
-  if(test==FALSE){output<- output$cam_timestamp}
-  return(output)}}
