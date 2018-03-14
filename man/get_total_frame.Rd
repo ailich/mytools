@@ -4,17 +4,20 @@
 \alias{get_total_frame}
 \title{Calculates Total Frame Number}
 \usage{
-get_total_frame(video_num, video_sec, fps = 12, vid_length = 1)
+get_total_frame(video_num, video_sec, video_frame = NULL, fps = 12,
+  vid_length = 1)
 }
 \arguments{
 \item{video_num}{vector video_numbers}
 
-\item{video_sec}{vector of seconds in video}
+\item{video_sec}{vector of seconds in video (alternativelly could use video_frame)}
+
+\item{video_frame}{vector of frames into video (alternativelly could use video_sec)}
 
 \item{fps}{frames per second}
 
 \item{vid_length}{video length in minutes}
 }
 \description{
-Calculates Total Frame Number by video number and seconds in
+Calculates Total Frame Number by video number and seconds or frame number in
 }

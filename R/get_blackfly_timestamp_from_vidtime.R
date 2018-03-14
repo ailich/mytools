@@ -1,8 +1,9 @@
 #' Returns Blackfly Timestamp based on Video Number and Seconds in
 #'
-#' Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number and then mathc that frame number to a table to see when that frame was recorded.
+#' Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number (or can use Total Frame Number directly) and then matches that frame number to a table to see when that frame was recorded.
 #' @param video_col vector of video numbers (must be same length as seconds_col)
 #' @param seconds_col vector of seconds in video (must be same length as video_col)
+#' @param Total_Frame Total Frame Number can be used instead of video_col and seconds_col
 #' @param cam_timestamp vector of camera timestamps (must be same length as cam_filepath)
 #' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
 #' @param test if TRUE output will be a tibble that can be used to check if the function is working correctly
@@ -12,13 +13,15 @@
 #' @import stringr
 #' @export
 
-get_blackfly_timestamp_from_vidtime<- function(video_col,seconds_col,cam_timestamp, cam_filepath, test=FALSE){
+get_blackfly_timestamp_from_vidtime<- function(video_col,seconds_col,Total_Frame=NULL, cam_timestamp, cam_filepath, test=FALSE){
   if (check_if_reset(cam_filepath)) {
     message("Error: camera was reset")
     stop()}
-  video<- bind_cols(as_tibble(video_col),as_tibble(seconds_col))
-  names(video)<- c("video_col","seconds_col")
-  video<- video %>% dplyr::mutate(frame_num=(video_col*720)+(seconds_col*12)) #calculate approximate frame number
+  if(is.null(Total_Frame)){
+    video<- bind_cols(as_tibble(video_col),as_tibble(seconds_col))
+    names(video)<- c("video_col","seconds_col")
+    video<- video %>% dplyr::mutate(frame_num=(video_col*720)+(seconds_col*12)) #calculate approximate frame number
+  } else{video<- tibble(frame_num=Total_Frame)}
   cam<- bind_cols(as_tibble(cam_timestamp), as_tibble(cam_filepath))
   names(cam)<- c("cam_timestamp", "cam_filepath")
   cam<- cam %>% filter(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam$cam_filepath)) #remove any rows without GigEGrabEx
