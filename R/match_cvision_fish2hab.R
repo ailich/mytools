@@ -8,7 +8,10 @@
 #' @import magrittr
 #' @export
 match_cvision_fish2hab<-function(hab_totalframe, merged_cvision_csv, include_framenum=FALSE){
-  fish_names<- sort_species(unique(merged_cvision_csv$Fish_Type))
+  if(min(hab_totalframe)>=min(merged_cvision_csv$Total_Frame)|max(hab_totalframe)<=max(merged_cvision_csv$Total_Frame)){
+  message("Error:Fish beyond bounds of Habitat Data")
+    stop()}
+    fish_names<- sort_species(unique(merged_cvision_csv$Fish_Type))
   new_df<- matrix(nrow = length(hab_totalframe), ncol=length(fish_names)+1) %>% as_tibble() #Species by Site Matrix
   names(new_df)<- c("Total_Frame", fish_names)
   new_df<- sapply(X = new_df, as.integer) %>% as_tibble
