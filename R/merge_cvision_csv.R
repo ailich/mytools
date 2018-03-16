@@ -10,26 +10,17 @@
 #' @import stringr
 #' @import readr
 
-merge_cvision_csv<- function(file_list=NULL, frames_per_sec, vid_length){
-  if(is.null(file_list)){file_list<- list.files(pattern = "\\.csv$")}
-  new_file_list<- rep(x = NA_character_,length(file_list)) #Initialize new file list
-  for (i in 1:length(file_list)) {
-    fish_file<- suppressWarnings(suppressMessages(read_csv(file_list[i])))
-    if (nrow(fish_file)>0) {new_file_list[i]<- file_list[i]}
-    rm(i,fish_file)
-  }
-  new_file_list<- new_file_list[!is.na(new_file_list)] #Create a new file list of only ones that contain fish
-
-  fish<- suppressWarnings(suppressMessages(read_csv(file = new_file_list[1])))
-  fish<- fish %>% mutate(file_name= new_file_list[1])
-  for (i in 2:length(new_file_list)){
-    new_fish<- suppressWarnings(suppressMessages(read_csv(new_file_list[i])))
+merge_cvision_csv<- function(file_list=list.files(pattern = "\\.csv$"), frames_per_sec, vid_length){
+  fish<- suppressWarnings(suppressMessages(read_csv(file = file_list[1],col_types=cols(.default="c", Trip_ID="i", Tow_Number="i", Fish_Number="i", Frame="i", Time_In_Video="d"))))
+  fish<- fish[,1:9]
+  fish<- fish %>% mutate(file_name= file_list[1])
+  for (i in 1:length(file_list)){
+    new_fish<- suppressWarnings(suppressMessages(read_csv(file = file_list[i],col_types=cols(.default="c", Trip_ID="i", Tow_Number="i", Fish_Number="i", Frame="i", Time_In_Video="d"))))
     new_fish<- new_fish[,1:9]
-    new_fish<- new_fish %>% mutate(file_name= new_file_list[i])
+    new_fish<- new_fish %>% mutate(file_name= file_list[i])
     fish<- bind_rows(fish,new_fish)
     rm(i,new_fish)
   }
-
   fish<- fish %>% select(file_name, Reviewer, Fish_Number, Fish_Type, Time_In_Video, Frame)
   fish$short_filename<- NA_character_
   for (i in 1:nrow(fish)) {
@@ -43,5 +34,5 @@ merge_cvision_csv<- function(file_list=NULL, frames_per_sec, vid_length){
   fish<- fish %>% mutate(Total_Time_In= (video*(vid_length*60))+Time_In_Video)
   fish<- fish %>% select(file_name,video,Reviewer,Fish_Number,Fish_Type,Time_In_Video, Frame, Total_Time_In, Total_Frame)
   return(fish)
-  }
+}
 
