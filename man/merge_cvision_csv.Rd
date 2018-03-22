@@ -4,7 +4,8 @@
 \alias{merge_cvision_csv}
 \title{Merge C-Vision CSV's}
 \usage{
-merge_cvision_csv(file_list = NULL, frames_per_sec, vid_length)
+merge_cvision_csv(file_list = list.files(pattern = "\\\\.csv$"),
+  frames_per_sec, vid_length)
 }
 \arguments{
 \item{file_list}{list of cvision files to be merged}

@@ -2,6 +2,7 @@
 
 export(FOV_Area_Habtable)
 export(PCC)
+export(avg_density)
 export(calc_dist)
 export(calc_width)
 export(check_cvision)
