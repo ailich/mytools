@@ -35,8 +35,8 @@ if(is.null(iter)){output=densities} else{
     boot_dens[i,]<- calc_dens(counts = counts_boot,area = area_boot) #Append calculated bootstrap density
   }
   boot_dens<- as.data.frame(sapply(boot_dens,sort)) #sort densities
-  upper_idx<- ceiling(iter*conf)
-  lower_idx<- floor(iter*(1-conf))
+  lower_idx<- round(iter*(1-conf)/2) #round to deal with floating point errors
+  upper_idx<- iter-lower_idx
   lower<- boot_dens[lower_idx,]
   upper<- boot_dens[upper_idx,]
   output<- rbind(lower, densities, upper)
