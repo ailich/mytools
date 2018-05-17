@@ -53,6 +53,7 @@ return(output)
 #' @param area vector of areas corresponding to observations (rows) in counts
 calc_dens<- function(counts, area){
   densities<- as.data.frame(lapply(counts,sum))/sum(area)
+  names(densities)<- names(counts) #Fixes names (as.data.frame changes spaces to periods)
   return(densities)
 }
 

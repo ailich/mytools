@@ -9,12 +9,13 @@ calc_width(alt, pitch, cam_angle = 32.8, HFOV_air = 82.4)
 \arguments{
 \item{alt}{altitude}
 
-\item{pitch}{pitch}
+\item{pitch}{pitch in degrees}
 
 \item{cam_angle}{camera angle in degrees}
 
-\item{HFOV_air}{HFOV in air for given camera}
+\item{HFOV_air}{HFOV in air for given camera in degrees}
 }
 \description{
-Calculates width of video frame in meters
+Calculates width of video frame in meters (Grasty 2014)
+Grasty, S. (2014). Use of a towed camera system for estimating reef fish population dynamics on the West Florida Shelf. (Master's), University of South Florida.
 }

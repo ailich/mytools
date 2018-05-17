@@ -2,8 +2,8 @@
 #'
 #' Merges all C-Vision CSV's into 1 CSV using a list of files or will merge all csv's in current working directory. NOTE: Use total frame for blackfly/AVT and Total Time for axis when trying to match to timestamp or position
 #' @param file_list list of cvision files to be merged
-#' @param frame_per_sec frames per second
-#' @param Video Length in Minutes
+#' @param frames_per_sec frames per second
+#' @param vid_length Length of video in minutes
 #' @export
 #' @import dplyr
 #' @import magrittr

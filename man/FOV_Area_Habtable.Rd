@@ -10,7 +10,7 @@ FOV_Area_Habtable(hab_timestamps, all_timestamps, alt, pitch, speed,
 \arguments{
 \item{hab_timestamps}{vector of timestamps of habitat frames}
 
-\item{all_timestamps}{vector of timestamps from Master 1Hz that correspong to altitude and pitches}
+\item{all_timestamps}{vector of timestamps from Master 1Hz that corresponding to alt, pitch, and speed}
 
 \item{alt}{vector of altitudes from Master 1Hz}
 

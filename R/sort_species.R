@@ -9,6 +9,6 @@ sort_species<- function(species_list){
   new_species_list<- gsub(pattern = "_0spp$", replacement = "_spp", x = new_species_list)
   noid_idx<- grep(pattern = "noid",x = new_species_list)
   new_species_list<- c(new_species_list, new_species_list[noid_idx])
-  new_species_list<- new_species_list[-noid_idx]
+  if (length(noid_idx)>0) {new_species_list<- new_species_list[-noid_idx]}
   return(new_species_list)
 }

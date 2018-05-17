@@ -4,7 +4,7 @@
 #' @param alt vector of altitudes from Master 1Hz
 #' @param pitch vector of pitches from Master 1Hz
 #' @param speed vector of CBASS speeds in knots from Master 1Hz
-#' @param all_timestamps vector of timestamps from Master 1Hz that correspong to altitude and pitches
+#' @param all_timestamps vector of timestamps from Master 1Hz that corresponding to alt, pitch, and speed
 #' @param hab_timestamps vector of timestamps of habitat frames
 #' @param cam_angle camera angle in degrees
 #' @param HFOV_air HFOV in air for given camera (default is that of blackfly camera)

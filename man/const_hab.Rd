@@ -7,9 +7,9 @@
 const_hab(my_data, hab_col)
 }
 \arguments{
-\item{my_data}{a tibble or dataframe containing all data}
+\item{my_data}{a tibble, dataframe, or spatial dataframe containing all data}
 
-\item{hab_col}{number specifying the column to check}
+\item{hab_col}{number or name specifying the column to check}
 }
 \description{
 Returns only observations where the habitat classes were the same as their previous and subsequent observations. Useful for training algorithmns b/c reduces effect of positional uncertainty. Will return a dataframe if a dataframe is input. Will return a tibble if a tibble is input.

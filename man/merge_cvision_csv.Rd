@@ -10,9 +10,9 @@ merge_cvision_csv(file_list = list.files(pattern = "\\\\.csv$"),
 \arguments{
 \item{file_list}{list of cvision files to be merged}
 
-\item{frame_per_sec}{frames per second}
+\item{frames_per_sec}{frames per second}
 
-\item{Video}{Length in Minutes}
+\item{vid_length}{Length of video in minutes}
 }
 \description{
 Merges all C-Vision CSV's into 1 CSV using a list of files or will merge all csv's in current working directory. NOTE: Use total frame for blackfly/AVT and Total Time for axis when trying to match to timestamp or position
