@@ -7,7 +7,7 @@
 avg_density(counts, area, iter = NULL, conf = NULL)
 }
 \arguments{
-\item{counts}{dataframe or tibble of counts}
+\item{counts}{dataframe or tibble of counts (can also be a vector if one species)}
 
 \item{area}{vector of areas corresponding to observations (rows) in counts}
 

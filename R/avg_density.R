@@ -3,7 +3,7 @@
 #' Calculates Fish Densities and optionally bootstrap confidence intervals.
 #' Returns a dataframe or tibble of densities for each species (depending on class input as counts)
 #' If iter is not NULL than row order will be lower bound, calculated average, upper bound
-#' @param counts dataframe or tibble of counts
+#' @param counts dataframe or tibble of counts (can also be a vector if one species)
 #' @param area vector of areas corresponding to observations (rows) in counts
 #' @param conf optional confidence level (0-1)
 #' @param iter optional number of iterations for creating confidence intervals
@@ -12,6 +12,8 @@
 #' @import magrittr
 avg_density<- function(counts, area, iter=NULL, conf=NULL){
 #Check Inputs
+if(is.vector(counts)){
+  counts<- as.data.frame(counts)}
 if(!is.data.frame(counts)){
   message("Error: counts must be dataframe or tibble")
   stop()}
@@ -30,7 +32,7 @@ if(is.null(iter)){output=densities} else{
   boot_dens[1,]<- densities #Add observed Density
   for (i in 2:iter) {
     rowidx<- sample(x = 1:nrow(counts), size = nrow(counts), replace = TRUE)
-    counts_boot<- counts[rowidx,] #Sample with replacement to create bootstrap sample
+    counts_boot<- counts[rowidx, , drop=FALSE] #Sample with replacement to create bootstrap sample
     area_boot<- area[rowidx]
     boot_dens[i,]<- calc_dens(counts = counts_boot,area = area_boot) #Append calculated bootstrap density
   }
@@ -52,7 +54,7 @@ return(output)
 #' @param counts dataframe of counts
 #' @param area vector of areas corresponding to observations (rows) in counts
 calc_dens<- function(counts, area){
-  densities<- as.data.frame(lapply(counts,sum))/sum(area)
+    densities<- as.data.frame(lapply(counts,sum))/sum(area)
   names(densities)<- names(counts) #Fixes names (as.data.frame changes spaces to periods)
   return(densities)
 }
