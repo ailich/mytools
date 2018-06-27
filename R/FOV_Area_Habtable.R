@@ -8,20 +8,28 @@
 #' @param hab_timestamps vector of timestamps of habitat frames
 #' @param cam_angle camera angle in degrees
 #' @param HFOV_air HFOV in air for given camera (default is that of blackfly camera)
+#' @param bin_size bin size in seconds (if not specified will be calculated)
+#' @param use_median Use median instead of mean for alt, pitch, and speed respectively
 #' @export
-FOV_Area_Habtable<- function(hab_timestamps, all_timestamps, alt, pitch, speed, cam_angle=32.8, HFOV_air= 82.4){
-  area<- rep(NA_real_, length(hab_timestamps))
+FOV_Area_Habtable<- function(hab_timestamps, all_timestamps, alt, pitch, speed, cam_angle=32.8, HFOV_air= 82.4, bin_size=NULL, use_median=c(FALSE, FALSE, FALSE)){
+  area<- rep(NA_real_, length(hab_timestamps)) #Dimension Variable
   for (i in 2:(length(hab_timestamps)-1)) {
     mid_time<- hab_timestamps[i]
-    low_time<- mid_time-floor((hab_timestamps[i]-hab_timestamps[i-1])/2)
-    high_time<- mid_time+floor((hab_timestamps[i+1]-hab_timestamps[i])/2)
-    idx<- which(all_timestamps==low_time):which(all_timestamps==high_time)
-    alt_avg<- mean(alt[idx])
-    pitch_avg<- mean(pitch[idx])
-    speed_avg<- mean(na.omit(speed[idx]))
+    if(is.null(bin_size)) {
+      low_time<- mid_time-((hab_timestamps[i]-hab_timestamps[i-1])/2)
+      high_time<- mid_time+((hab_timestamps[i+1]-hab_timestamps[i])/2)
+    } else {
+      low_time= mid_time - bin_size/2
+      high_time= mid_time + bin_size/2}
+    idx<- (all_timestamps >= low_time) & (all_timestamps <= high_time)
+    if(use_median[1]){alt_avg<- median(alt[idx], na.rm = TRUE)} else{
+      alt_avg<- mean(alt[idx], na.rm = TRUE)}
+    if(use_median[2]){pitch_avg<- median(pitch[idx], na.rm = TRUE)} else{
+      pitch_avg<- mean(pitch[idx], na.rm = TRUE)}
+    if(use_median[3]){speed_avg<- median(speed[idx], na.rm = TRUE)}else{
+      speed_avg<- mean(speed[idx], na.rm = TRUE)}
     width<- calc_width(alt = alt_avg , pitch = pitch_avg)
-    duration<- ((hab_timestamps[i]-hab_timestamps[i-1])/2)+((hab_timestamps[i+1]-hab_timestamps[i])/2)
-    distance<- calc_dist(speed_avg, speed_units="knots", duration=as.numeric(duration))
+    distance<- calc_dist(speed_avg, speed_units="knots", duration=as.numeric(high_time-low_time))
     area[i]<- width*distance
   }
   return(area)

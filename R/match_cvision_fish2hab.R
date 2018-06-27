@@ -1,13 +1,19 @@
 #' Matches fish recorded in C-Vision to closest habitat frame
 #'
 #' Matches fish recorded in C-Vision to closest habitat frame. Returns a tibble of species by site counts.
-#' @param hab_totalframe vector of total frame number of habitat observation
+#' @param hab_totalframe vector of total frame number of habitat observation (Alternatively could use video_num, video-sec, video_frame, fps, and vid_length)
 #' @param merged_cvision_csv output of merge_cvision_csv
 #' @param include_framenum whether or not to include frame number in output table
+#' @param video_num vector video_numbers from habitat dataframe (Not needed if hab_totalframe suppled)
+#' @param video_sec vector of seconds in video from habitat dataframe (Not needed if hab_totalframe suppled)
+#' @param fps frames per second (Not needed if hab_totalframe suppled)
+#' @param vid_length video length in minutes (Not needed if hab_totalframe suppled)
 #' @import dplyr
 #' @import magrittr
 #' @export
-match_cvision_fish2hab<-function(hab_totalframe, merged_cvision_csv, include_framenum=FALSE){
+match_cvision_fish2hab<-function(hab_totalframe=NULL, merged_cvision_csv, include_framenum=FALSE, video_num, video_sec, fps=12, vid_length=1){
+  if(is.null(hab_totalframe)){
+    hab_totalframe<- get_total_frame(video_num = video_num, video_sec = video_sec, fps = fps, vid_length = vid_length)}
   if(min(hab_totalframe)>=min(merged_cvision_csv$Total_Frame)|max(hab_totalframe)<=max(merged_cvision_csv$Total_Frame)){
   message("Error:Fish beyond bounds of Habitat Data")
     stop()}

@@ -4,15 +4,24 @@
 \alias{match_cvision_fish2hab}
 \title{Matches fish recorded in C-Vision to closest habitat frame}
 \usage{
-match_cvision_fish2hab(hab_totalframe, merged_cvision_csv,
-  include_framenum = FALSE)
+match_cvision_fish2hab(hab_totalframe = NULL, merged_cvision_csv,
+  include_framenum = FALSE, video_num, video_sec, fps = 12,
+  vid_length = 1)
 }
 \arguments{
-\item{hab_totalframe}{vector of total frame number of habitat observation}
+\item{hab_totalframe}{vector of total frame number of habitat observation (Alternatively could use video_num, video-sec, video_frame, fps, and vid_length)}
 
 \item{merged_cvision_csv}{output of merge_cvision_csv}
 
 \item{include_framenum}{whether or not to include frame number in output table}
+
+\item{video_num}{vector video_numbers from habitat dataframe (Not needed if hab_totalframe suppled)}
+
+\item{video_sec}{vector of seconds in video from habitat dataframe (Not needed if hab_totalframe suppled)}
+
+\item{fps}{frames per second (Not needed if hab_totalframe suppled)}
+
+\item{vid_length}{video length in minutes (Not needed if hab_totalframe suppled)}
 }
 \description{
 Matches fish recorded in C-Vision to closest habitat frame. Returns a tibble of species by site counts.

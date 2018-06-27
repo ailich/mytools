@@ -5,7 +5,8 @@
 \title{Calculates area per habitat frame}
 \usage{
 FOV_Area_Habtable(hab_timestamps, all_timestamps, alt, pitch, speed,
-  cam_angle = 32.8, HFOV_air = 82.4)
+  cam_angle = 32.8, HFOV_air = 82.4, bin_size = NULL,
+  use_median = c(FALSE, FALSE, FALSE))
 }
 \arguments{
 \item{hab_timestamps}{vector of timestamps of habitat frames}
@@ -21,6 +22,10 @@ FOV_Area_Habtable(hab_timestamps, all_timestamps, alt, pitch, speed,
 \item{cam_angle}{camera angle in degrees}
 
 \item{HFOV_air}{HFOV in air for given camera (default is that of blackfly camera)}
+
+\item{bin_size}{bin size in seconds (if not specified will be calculated)}
+
+\item{use_median}{Use median instead of mean for alt, pitch, and speed respectively}
 }
 \description{
 Calculates area per habitat frame using the observed habitat as the midpoint and average altitude and pitch over that time period. (First and last row will be NA)
