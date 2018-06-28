@@ -7,7 +7,7 @@
 #' @param fps frames per second
 #' @param vid_length video length in minutes
 #' @export
-get_total_frame<- function(video_num, video_sec, video_frame=NULL, fps=12, vid_length=1){
+get_total_frame<- function(video_num, video_sec, video_frame=NULL, fps, vid_length=1){
   fpv<- fps*(vid_length*60) #frames per video
   if(is.null(video_frame)){Total_Frame<- (video_num*fpv)+(video_sec*fps)
   } else{Total_Frame<- (video_num*fpv)+video_frame}

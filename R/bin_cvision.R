@@ -24,7 +24,6 @@ bin_cvision<-function(merged_cvision_csv, start_vid, end_vid, bin_size=15, vid_l
   for (i in 1:vid_samp) {
     bin_labels[i]<- bin_size*(i-1)
   }
-  bin_labels
   new_df<- matrix(nrow = vid_samp*n_videos, ncol=length(fish_names)+2) %>% as_tibble() #Species by Site Matrix
   names(new_df)<- c("Video", "Seconds", fish_names)
   new_df$Video<- as.vector(sapply(start_vid:end_vid, rep, vid_samp))
