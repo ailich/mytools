@@ -10,5 +10,5 @@ check_if_reset(cam_filepath)
 \item{cam_filepath}{vector of filepaths from blackfly camera}
 }
 \description{
-Does that by checking if gigegrab number from file decreases at any point
+Checks if blackfly has been restarted during transect seeing if gigegrab number goes to 0 anywhere that is not the start
 }
