@@ -12,7 +12,7 @@
 #' @import dplyr
 #' @import magrittr
 #' @export
-match_cvision_fish2hab2<-function(hab_totalframe=NULL, merged_cvision_csv, include_framenum=FALSE, video_num, video_sec, fps, vid_length=1, include_vid_sec=FALSE){
+match_cvision_fish2hab<-function(hab_totalframe=NULL, merged_cvision_csv, include_framenum=FALSE, video_num, video_sec, fps, vid_length=1, include_vid_sec=FALSE){
   if(is.null(hab_totalframe)){
     hab_totalframe<- get_total_frame(video_num = video_num, video_sec = video_sec, fps = fps, vid_length = vid_length)}
   if(min(hab_totalframe)>=min(merged_cvision_csv$Total_Frame)|max(hab_totalframe)<=max(merged_cvision_csv$Total_Frame)){
