@@ -2,10 +2,11 @@
 #'
 #' Calculates Fish Densities and optionally bootstrap confidence intervals.
 #' Returns a dataframe or tibble of densities for each species (depending on class input as counts)
-#' If iter is not NULL than row order will be lower bound, calculated average, upper bound
+#' If iter and conf are not NULL than row order will be lower bound, calculated average, upper bound
+#' If iter isn not NULL but conf is NULL, than the mean from each bootstrap sample will be returned
 #' @param counts dataframe or tibble of counts (can also be a vector if one species)
 #' @param area vector of areas corresponding to observations (rows) in counts
-#' @param conf optional confidence level (0-1)
+#' @param conf optional confidence level (0-1) (If null will return average density for each bootstrap sample)
 #' @param iter optional number of iterations for creating confidence intervals
 #' @export
 #' @import dplyr
@@ -36,13 +37,15 @@ if(is.null(iter)){output=densities} else{
     area_boot<- area[rowidx]
     boot_dens[i,]<- calc_dens(counts = counts_boot,area = area_boot) #Append calculated bootstrap density
   }
-  boot_dens<- as.data.frame(sapply(boot_dens,sort)) #sort densities
-  lower_idx<- round(iter*(1-conf)/2) #round to deal with floating point errors
-  upper_idx<- iter-lower_idx
-  lower<- boot_dens[lower_idx,]
-  upper<- boot_dens[upper_idx,]
-  output<- rbind(lower, densities, upper)
-  rownames(output)<- NULL
+  if(!is.null(conf)){
+    boot_dens<- as.data.frame(sapply(boot_dens,sort)) #sort densities
+    lower_idx<- round(iter*(1-conf)/2) #round to deal with floating point errors
+    upper_idx<- iter-lower_idx
+    lower<- boot_dens[lower_idx,]
+    upper<- boot_dens[upper_idx,]
+    output<- rbind(lower, densities, upper)
+    rownames(output)<- NULL
+  } else{output<- boot_dens} #return all bootstrap means
 }
 if(isatibble){output<- as_tibble(output)}
 return(output)
