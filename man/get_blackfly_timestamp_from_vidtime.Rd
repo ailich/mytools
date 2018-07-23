@@ -6,8 +6,7 @@
 \usage{
 get_blackfly_timestamp_from_vidtime(video_col, seconds_col,
   Total_Frame = NULL, cam_timestamp, cam_filepath, test = FALSE,
-  vid_length = 1, fps = calc_fps(cam_timestamp, cam_filepath),
-  round_fps = FALSE)
+  vid_length = 1, fps = NULL)
 }
 \arguments{
 \item{video_col}{vector of video numbers (must be same length as seconds_col)}
@@ -24,9 +23,7 @@ get_blackfly_timestamp_from_vidtime(video_col, seconds_col,
 
 \item{vid_length}{Length of each video in minutes}
 
-\item{fps}{Frames Per Second (Can be calculated by default from cam_timestamp and cam_filepath)}
-
-\item{round_fps}{Logical value specifying whether or not to round frames per second to nearest integer. This is FALSE by default. Some Blackfly videos (mostly older ones) were sequenced using an approximate integer value fps causing it to prgressively drift from axis cameras. If the resulting timestamps seem to provide a value off by a few seconds (especially towards the ends of transects), try switching this value.}
+\item{fps}{Frames Per Second}
 }
 \description{
 Returns a vector of Blackfly Timestamps corresponding to video_col and video_sec by using those two parameters to approximate frame number (or can use Total Frame Number directly) and then matches that frame number to a table to see when that frame was recorded.
