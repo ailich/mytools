@@ -5,7 +5,7 @@
 #' @param cam_timestamp vector of camera timestamps (must be same length as cam_filepath)
 #' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
 #' @param u_second vector of microseconds (Alternatively microseconds can already be in the timestamp) (must be same length as cam_filepath)
-#' @import lubridate
+#' @importFrom lubridate dmicroseconds
 #' @import dplyr
 #' @import magrittr
 #' @import tibble
