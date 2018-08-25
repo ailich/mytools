@@ -14,13 +14,14 @@ merge_cvision_csv<- function(file_list=list.files(pattern = "\\.csv$"), frames_p
   fish<- suppressWarnings(suppressMessages(read_csv(file = file_list[1],col_types=cols(.default="c", Trip_ID="i", Tow_Number="i", Fish_Number="i", Frame="i", Time_In_Video="d"))))
   fish<- fish[,1:9]
   fish<- fish %>% mutate(file_name= file_list[1])
-  for (i in 1:length(file_list)){
-    new_fish<- suppressWarnings(suppressMessages(read_csv(file = file_list[i],col_types=cols(.default="c", Trip_ID="i", Tow_Number="i", Fish_Number="i", Frame="i", Time_In_Video="d"))))
-    new_fish<- new_fish[,1:9]
-    new_fish<- new_fish %>% mutate(file_name= file_list[i])
-    fish<- bind_rows(fish,new_fish)
-    rm(i,new_fish)
-  }
+  if(length(file_list)>1){
+    for (i in 2:length(file_list)){
+      new_fish<- suppressWarnings(suppressMessages(read_csv(file = file_list[i],col_types=cols(.default="c", Trip_ID="i", Tow_Number="i", Fish_Number="i", Frame="i", Time_In_Video="d"))))
+      new_fish<- new_fish[,1:9]
+      new_fish<- new_fish %>% mutate(file_name= file_list[i])
+      fish<- bind_rows(fish,new_fish)
+      rm(i,new_fish)
+    }}
   fish<- fish %>% select(file_name, Reviewer, Fish_Number, Fish_Type, Time_In_Video, Frame)
   fish$short_filename<- NA_character_
   for (i in 1:nrow(fish)) {
