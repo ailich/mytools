@@ -11,7 +11,7 @@ calc_width(alt, pitch, cam_angle = 32.8, HFOV_air = 82.4)
 
 \item{pitch}{pitch in degrees}
 
-\item{cam_angle}{camera angle in degrees}
+\item{cam_angle}{camera angle in degrees (as measured down from the horizontal)}
 
 \item{HFOV_air}{HFOV in air for given camera in degrees}
 }

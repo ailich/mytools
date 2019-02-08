@@ -4,7 +4,7 @@
 #' Grasty, S. (2014). Use of a towed camera system for estimating reef fish population dynamics on the West Florida Shelf. (Master's), University of South Florida.
 #' @param alt altitude
 #' @param pitch pitch in degrees
-#' @param cam_angle camera angle in degrees
+#' @param cam_angle camera angle in degrees (as measured down from the horizontal)
 #' @param HFOV_air HFOV in air for given camera in degrees
 #' @export
 calc_width<- function(alt, pitch, cam_angle=32.8, HFOV_air= 82.4){
