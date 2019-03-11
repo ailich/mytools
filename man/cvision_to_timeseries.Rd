@@ -4,8 +4,8 @@
 \alias{cvision_to_timeseries}
 \title{Function to convertmerged_cvision_csv to fish time-series for all species}
 \usage{
-cvision_to_timeseries(merged_cvision_csv, window_size, vid_start = 0, vid_end,
-  vid_length = 1, fps, by_species = TRUE)
+cvision_to_timeseries(merged_cvision_csv, window_size, vid_start = 0,
+  vid_end, vid_length = 1, fps, by_species = TRUE)
 }
 \arguments{
 \item{merged_cvision_csv}{Output from merge_cvison_csv}
