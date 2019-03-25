@@ -5,6 +5,7 @@
 #' @param cam_timestamp vector of camera timestamps (must be same length as cam_filepath)
 #' @param cam_filepath vector of filepaths from balckfly camera (must be same length as cam_timestamp)
 #' @param u_second vector of microseconds (Alternatively microseconds can already be in the timestamp) (must be same length as cam_filepath)
+#' @param check logical indicating whether or not to check if camera was reset
 #' @importFrom lubridate dmicroseconds
 #' @import dplyr
 #' @import magrittr
@@ -12,10 +13,11 @@
 #' @import stringr
 #' @export
 
-calc_fps<- function(cam_timestamp, u_second=rep(0, length(cam_timestamp)), cam_filepath){
-  if (check_if_reset(cam_filepath)) {
-    message("Error: camera was reset")
-    stop()}
+calc_fps<- function(cam_timestamp, u_second=rep(0, length(cam_timestamp)), cam_filepath, check=TRUE){
+  if(check){
+    if (check_if_reset(cam_filepath)) {
+      message("Error: camera was reset")
+      stop()}}
   my_pattern<- detect_cam_pattern(cam_filepath=cam_filepath) #Detect pattern in cam_filepath
   cam<- bind_cols(cam_timestamp = cam_timestamp, u_second= u_second, cam_filepath=cam_filepath)
   start_pt<- cam[10,] #Start Point

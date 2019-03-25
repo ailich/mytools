@@ -5,7 +5,7 @@
 \title{Calculates frame-rate of Blackfly Camera}
 \usage{
 calc_fps(cam_timestamp, u_second = rep(0, length(cam_timestamp)),
-  cam_filepath)
+  cam_filepath, check = TRUE)
 }
 \arguments{
 \item{cam_timestamp}{vector of camera timestamps (must be same length as cam_filepath)}
@@ -13,6 +13,8 @@ calc_fps(cam_timestamp, u_second = rep(0, length(cam_timestamp)),
 \item{u_second}{vector of microseconds (Alternatively microseconds can already be in the timestamp) (must be same length as cam_filepath)}
 
 \item{cam_filepath}{vector of filepaths from balckfly camera (must be same length as cam_timestamp)}
+
+\item{check}{logical indicating whether or not to check if camera was reset}
 }
 \description{
 Calculates frame-rate of Blackfly Camera.
