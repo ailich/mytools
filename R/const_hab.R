@@ -21,7 +21,7 @@ const_hab<- function(my_data, hab_col){
   }
   idx=vector(mode = "logical", length =NROW(my_data)) #Initialize index vector as FALSE
   for (i in 2:(NROW(my_data)-1)) {
-    if (my_data[,hab_col][i]==my_data[,hab_col][i-1] & my_data[,hab_col][i]==my_data[,hab_col][i+1]){idx[i]=TRUE}
+    if (identical(my_data[,hab_col][i], my_data[,hab_col][i-1]) & identical(my_data[,hab_col][i],my_data[,hab_col][i+1])){idx[i]=TRUE}
   }#Include only observations that are the same as next and previous observations
   const_data<- my_data[idx,]
   if (isatibble==TRUE){const_data<- as_tibble(const_data)} #Convert to tibble if tibble was input

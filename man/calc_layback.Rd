@@ -11,7 +11,7 @@ calc_layback(payout, depth, GPS_Source = "None", zeroed, cat_fact = 1)
 
 \item{depth}{depth of CBASS (meters)}
 
-\item{GPS_Source}{Adds offset forward/aft offset between trawl block and GPS source. Must be "None", "GNSS_Fwd" or "EK"}
+\item{GPS_Source}{Adds offset forward/aft offset between trawl block and GPS source. Must be "None" or "GNSS_Fwd"}
 
 \item{zeroed}{"water" or "block"}
 
