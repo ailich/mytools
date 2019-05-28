@@ -9,7 +9,7 @@ get_payout(winch_dir, trim_rows = TRUE)
 \arguments{
 \item{winch_dir}{directory containing winch data}
 
-\item{trim_rows}{A logical that if TRUE (default), the timestamps will not repeat in the output as all readings with the same timestamp will be averaged}
+\item{trim_rows}{A logical that if TRUE (default), will take the median of all values with the same timestamp so that each timestamp has one value}
 }
 \description{
 Gets Payout data in single table from winch data folder.

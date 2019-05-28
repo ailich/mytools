@@ -2,10 +2,11 @@
 #'
 #' Gets Payout data in single table from winch data folder.
 #' @param winch_dir directory containing winch data
-#' @param trim_rows A logical that if TRUE (default), the timestamps will not repeat in the output as all readings with the same timestamp will be averaged
+#' @param trim_rows A logical that if TRUE (default), will take the median of all values with the same timestamp so that each timestamp has one value
 #' @import dplyr
 #' @importFrom lubridate mdy_hms
 #' @importFrom readr read_csv
+#' @importFrom stats median
 #' @export
 
 get_payout<- function(winch_dir, trim_rows=TRUE){
@@ -22,7 +23,9 @@ get_payout<- function(winch_dir, trim_rows=TRUE){
       winch_acc<- rbind(winch_acc, winch_df) #Append to accumulator
     }
   }
+  if (class(winch_acc$Payout_m)!="numeric"){
+    winch_acc$Payout_m<- as.numeric(winch_acc$Payout_m)} #ensure payout is a numeric class
   if (trim_rows){
-    winch_acc<- winch_acc %>% group_by(timestamp) %>% summarize(Payout_m= mean(Payout_m, na.rm=TRUE)) %>% ungroup()} #Average readings by timestamp
+    winch_acc<- winch_acc %>% group_by(timestamp) %>% summarize(Payout_m= median(Payout_m, na.rm=TRUE)) %>% ungroup()} #Average readings by timestamp
   winch_acc<- winch_acc %>% mutate(timestamp=mdy_hms(timestamp)) %>% arrange(timestamp) %>% select(timestamp, Payout_m) #Sort rows by timestamp and order columns
   return(winch_acc)}
