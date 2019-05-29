@@ -17,7 +17,15 @@ calc_layback<- function(payout, depth, GPS_Source= "None", zeroed, cat_fact=1){
   if (zeroed == "water"){payout<- payout + Block_height} #Approximately this much line would be let out to reach water
   if (GPS_Source == "None") {y_offset<- 0} #No offset
   if (GPS_Source == "GNSS_Fwd") {y_offset<- 8.617 - (-4.864)} #Forward/Aft offset between GNSS_Fwd antenna and trawl block
-  layback<- y_offset + sqrt(((cat_fact * payout)^2) - ((depth + Block_height)^2))
+  neg_idx<- which(payout< 0)
+  if(length(neg_idx)>0){
+    warning("Some of adjuted payout is negative. Replacing with NA's")
+    payout[neg_idx]<- NA
+  }
+  c2<- (cat_fact * payout)^2
+  b2<- (depth + Block_height)^2
+  a<- sqrt(c2-b2) #Pythagorean
+  layback<- y_offset + a #Add y offset to get layback
   return(layback)
 }
 
