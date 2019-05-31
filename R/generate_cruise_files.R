@@ -109,7 +109,9 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
     payout<- payout %>%
       mutate(timestamp= round_date(timestamp + microseconds(u_second), unit = "second"))
     payout<- payout %>% select(timestamp, payout)
-    payout<- payout %>% group_by(timestamp) %>% summarise(Payout_m = stats::median(payout, na.rm=TRUE))
+    payout<- payout %>% group_by(timestamp) %>%
+      summarise(Payout_m = stats::median(payout, na.rm=TRUE)) %>%
+      ungroup()
   } else{
     payout<- get_payout(winch_dir = winch_dir, trim_rows = TRUE)} #Get Payout from winch data
   ##############################################################################################
