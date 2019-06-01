@@ -96,12 +96,6 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
 
   Ship_File2<- data.frame(timestamp = seq.POSIXt(from = min(Ship_File$timestamp, na.rm=TRUE), to = max(Ship_File$timestamp, na.rm=TRUE), by="sec")) #Create 1Hz Table
   Ship_File2<- Ship_File2 %>% left_join(Ship_File, by="timestamp")
-  Ship_File2<- Ship_File2 %>% mutate(Ship_Speed_mps_1minAvg=NA_real_)
-  for (m in 60:nrow(Ship_File2)) {
-    idx_speed<- seq(from = m-59, to = m, by = 1)
-    Ship_File2$Ship_Speed_mps_1minAvg[m]<- mean(Ship_File2$Ship_Speed_mps[idx_speed], na.rm=TRUE)
-  } #Calculate 1 minute average (one-sided backwards) of Ship Speed
-
   ##############################################################################################
   #Get Payout
   if(grepl(pattern = "\\.tsv$", x = winch_dir)){ #Get payout from Alex #2 table
@@ -180,6 +174,12 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
         left_join(EK_pos2, by= "timestamp") %>%
         left_join(payout, by ="timestamp") %>%
         left_join(Ship_File2, by="timestamp") #Join tables to transect_df
+
+      transect_df <- transect_df %>% mutate(Ship_Speed_mps_1minAvg=NA_real_)
+      for (m in 60:nrow(transect_df)) {
+        idx_speed<- seq(from = m-59, to = m, by = 1)
+        transect_df$Ship_Speed_mps_1minAvg[m]<- mean(transect_df$Ship_Speed_mps[idx_speed], na.rm=TRUE)
+        } #Calculate 1 minute average (one-sided backwards) of Ship Speed
       transect_df<- transect_df %>%
         select(timestamp, pitch, altitude, depth, Latitude, Longitude, Latitude_interp, Longitude_interp, Payout_m, Ship_Speed_mps, Ship_Speed_mps_1minAvg)
       names(transect_df)[2:8]<- c("CBASS_Pitch", "CBASS_Alt", "CBASS_Depth", "Ship_Lat", "Ship_Lon", "Ship_Lat_Interp", "Ship_Lon_Interp")
