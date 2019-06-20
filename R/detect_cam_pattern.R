@@ -4,9 +4,11 @@
 #' @param cam_filepath vector of filepaths from blackfly camera
 
 detect_cam_pattern<- function(cam_filepath){
-if(sum(grepl(pattern = "GigEGrabEx-[\\d]*", x = cam_filepath))>0){
-  my_pattern<- "GigEGrabEx-[\\d]*"} else if(sum(grepl(pattern = "Blackfly-[\\d]*", x = cam_filepath))>0){
-  my_pattern<- "Blackfly-[\\d]*"} else{
-    message("Error: filepath pattern not recognized")
+  patterns<- unique(str_replace_all(string = basename(cam_filepath), pattern = "\\d+", replacement = "\\\\d+"))
+  patterns
+  my_pattern<- patterns[patterns != "\\d+-\\d+" & (!grepl(pattern = "*\\.txt", x = patterns))]
+  my_pattern
+  if(length(my_pattern)>1){
+    message("Error: multiple patterns available")
     stop()}
-return(my_pattern)}
+  return(my_pattern)}
