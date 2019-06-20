@@ -9,6 +9,8 @@
 #' @param altimeter_file name of altimeter files in CBASS directory. Default is "altimeter_readings.tsv" (only change if there is a default in original data table)
 #' @param ctd_file name of ctd files under CBASS directory. Default is "ctd_readings.tsv" (only change if there is a mistake in default data table)
 #' @param compass_file name of compass files under CBASS directory. Default is "compass_readings.tsv" (only change if there is a mistake in original default table)
+#' @param zeroed Where winch is zeroed ("water" or "block", default is water)
+#' @param GPS_Source Adds offset forward/aft offset between trawl block and GPS source. Must be "None" or "GNSS_Fwd" or "CoG" (Center of Gravity). Default is CoG.
 #' @param CBASS_transect_name Name of CBASS transect. Only use if you want to generate files for just one transect.
 #' @param CBASS_transect_subdir Name of sub_dir for CBASS transect. Only use if you want to generate files for just one transect.
 #' @import lubridate
@@ -20,13 +22,15 @@
 #' @importFrom writexl write_xlsx
 #' @export
 
-generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_dir, altimeter_file= "altimeter_readings.tsv", ctd_file= "ctd_readings.tsv",compass_file= "compass_readings.tsv", CBASS_transect_name=NULL, CBASS_transect_subdir=""){
+generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_dir, altimeter_file= "altimeter_readings.tsv", ctd_file= "ctd_readings.tsv",compass_file= "compass_readings.tsv", zeroed = "water", GPS_Source = "CoG", CBASS_transect_name=NULL, CBASS_transect_subdir=""){
   #Set up messages file (DO NOT EDIT THIS)
   warn_behavior<- getOption("warn")
   options(warn = 1) #Set warnings behavior
   message_file_name<- paste(output_dir,"messages.txt", sep = "/")
   message_file <- file(message_file_name, open="wt")
   sink(message_file, type = "message")
+  message(paste("Date and Time:", Sys.time()))
+  message("")
   message("Inputs")
   message(paste("output_dir = ", output_dir))
   message(paste("EK_dir = ", EK_dir))
@@ -36,6 +40,8 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
   message(paste("altimeter_file =", altimeter_file))
   message(paste("ctd_file =", ctd_file))
   message(paste("compass_file =", compass_file))
+  message(paste("zeroed =", zeroed))
+  message(paste("GPS_Source =", GPS_Source))
   message(paste("CBASS_transect_name =", CBASS_transect_name))
   message(paste("CBASS_transect_subdir =", CBASS_transect_subdir))
   message("")
@@ -184,17 +190,17 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
         select(timestamp, pitch, altitude, depth, Latitude, Longitude, Latitude_interp, Longitude_interp, Payout_m, Ship_Speed_mps, Ship_Speed_mps_1minAvg)
       names(transect_df)[2:8]<- c("CBASS_Pitch", "CBASS_Alt", "CBASS_Depth", "Ship_Lat", "Ship_Lon", "Ship_Lat_Interp", "Ship_Lon_Interp")
 
-      transect_df<- transect_df %>% mutate(Layback_m = calc_layback(payout = Payout_m, depth = CBASS_Depth, GPS_Source = "GNSS_Fwd", zeroed = "water", cat_fact = 1))
-      if(length(which(is.nan(transect_df$Layback_m)))>0){
+      transect_df<- transect_df %>% mutate(k1_Layback_m = calc_layback(payout = Payout_m, depth = CBASS_Depth, GPS_Source = GPS_Source, zeroed = zeroed, cat_fact = 1))
+      if(length(which(is.nan(transect_df$k1_Layback_m)))>0){
         warning(paste("Depth may exceed payout. Nan's produced in Layback_m for", curr_dir))}
-      transect_df<- transect_df %>% mutate(Layback_sec = Layback_m/Ship_Speed_mps_1minAvg)
-      transect_df<- transect_df %>% mutate(Time_To_Match= round_date(timestamp - seconds(Layback_sec), unit = "second"))
-      transect_df<- transect_df %>% mutate(CBASS_Lat=NA_real_) %>% mutate(CBASS_Lon=NA_real_)
+      transect_df<- transect_df %>% mutate(k1_Layback_sec = k1_Layback_m/Ship_Speed_mps_1minAvg)
+      transect_df<- transect_df %>% mutate(Time_To_Match= round_date(timestamp - seconds(k1_Layback_sec), unit = "second"))
+      transect_df<- transect_df %>% mutate(k1_CBASS_Lat=NA_real_) %>% mutate(k1_CBASS_Lon=NA_real_)
       for (k in 1:nrow(transect_df)) {
         idx<- which(EK_pos2$timestamp == transect_df$Time_To_Match[k])
         if (length(idx)>0){
-          transect_df$CBASS_Lat[k]<- EK_pos2$Latitude_interp[idx]
-          transect_df$CBASS_Lon[k]<- EK_pos2$Longitude_interp[idx]
+          transect_df$k1_CBASS_Lat[k]<- EK_pos2$Latitude_interp[idx]
+          transect_df$k1_CBASS_Lon[k]<- EK_pos2$Longitude_interp[idx]
         }} #Get Ship Position lagged by layback time
       transect_df<- transect_df %>% select(-Time_To_Match)
       output_filename<- paste0(CBASS_transects[i], "_", sub_dirs[j])

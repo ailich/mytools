@@ -7,7 +7,8 @@
 generate_cruise_files(output_dir, EK_dir, CBASS_dir, Ship_dir, winch_dir,
   altimeter_file = "altimeter_readings.tsv",
   ctd_file = "ctd_readings.tsv", compass_file = "compass_readings.tsv",
-  CBASS_transect_name = NULL, CBASS_transect_subdir = "")
+  zeroed = "water", GPS_Source = "CoG", CBASS_transect_name = NULL,
+  CBASS_transect_subdir = "")
 }
 \arguments{
 \item{output_dir}{Directory to output files to}
@@ -25,6 +26,10 @@ generate_cruise_files(output_dir, EK_dir, CBASS_dir, Ship_dir, winch_dir,
 \item{ctd_file}{name of ctd files under CBASS directory. Default is "ctd_readings.tsv" (only change if there is a mistake in default data table)}
 
 \item{compass_file}{name of compass files under CBASS directory. Default is "compass_readings.tsv" (only change if there is a mistake in original default table)}
+
+\item{zeroed}{Where winch is zeroed ("water" or "block", default is water)}
+
+\item{GPS_Source}{Adds offset forward/aft offset between trawl block and GPS source. Must be "None" or "GNSS_Fwd" or "CoG" (Center of Gravity). Default is CoG.}
 
 \item{CBASS_transect_name}{Name of CBASS transect. Only use if you want to generate files for just one transect.}
 
