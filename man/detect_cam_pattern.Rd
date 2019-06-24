@@ -2,7 +2,7 @@
 % Please edit documentation in R/detect_cam_pattern.R
 \name{detect_cam_pattern}
 \alias{detect_cam_pattern}
-\title{Internal Function for detecting string type in camera table}
+\title{Function for detecting string type in camera table}
 \usage{
 detect_cam_pattern(cam_filepath)
 }
@@ -10,5 +10,5 @@ detect_cam_pattern(cam_filepath)
 \item{cam_filepath}{vector of filepaths from blackfly camera}
 }
 \description{
-Internal Function for detecting string type in camera table
+Function for detecting string type in camera table
 }

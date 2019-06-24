@@ -1,25 +1,29 @@
-#' Checks if blackfly has been restarted during transect
+#' Checks if camera has been restarted during transect
 #'
-#' Checks if blackfly has been restarted during transect seeing if gigegrab number goes to 0 anywhere that is not the start
+#' Checks if camera has been restarted during transect by seeing if frames where written to different directories. Optionally can return index where restart occurred (Gives index of first value after restart).
 #' @param cam_filepath vector of filepaths from blackfly camera
+#' @param display_warning Logical indicating whether a warning should be displayed if restart is detected
+#' @param return_idx Logical indicating whether the index of where the restart occurred should also be returned
 #' @import dplyr
 #' @import magrittr
 #' @import stringr
 #' @export
 
-check_if_reset<- function (cam_filepath) {
-  my_pattern <- detect_cam_pattern(cam_filepath = cam_filepath)
-  cam <- tibble(cam_filepath = cam_filepath)
-  cam <- cam %>% mutate(base_name = basename(cam_filepath))
-  cam <- cam %>% filter(grepl(pattern = my_pattern, x = cam$base_name))
-  cam <- cam %>% mutate(frame_id = as.numeric(str_extract(cam$base_name, "\\d+")))
-  idx <- which(cam$frame_id == 0)
-  idx <- idx[idx != 1]
-  output <- length(idx) != 0
-  if (output) {
-    for (i in 1:length(idx)) {
-      message(paste("Camera was reset after", as.character(cam$frame_id[idx[i] - 1])))
-    }
+check_if_reset<- function (cam_filepath, display_warning = TRUE, return_idx = FALSE) {
+  cam_filepath2<- tibble(file_path = cam_filepath)
+  cam_filepath2<- cam_filepath2 %>% filter(grepl(pattern = "\\.", file_path))
+  cam_filepath2<- cam_filepath2 %>% mutate(base_name = basename(file_path))
+  cam_filepath2<- cam_filepath2 %>% mutate(cam_dir= str_remove(pattern = base_name, string = file_path))
+  cam_dirs<- unique(cam_filepath2$cam_dir)
+  cam_dirs
+  was_reset<- length(cam_dirs)>1
+  idx<- rep(NA_integer_, length(cam_dirs)-1)
+  for (i in 2:length(cam_dirs)) {
+    idx[i-1]<- grep(pattern = cam_dirs[i], cam_filepath)[1]+1
   }
+  if (return_idx){
+    output<- data.frame(was_reset=was_reset, idx=idx)} else{
+      output<- was_reset}
+  if(display_warning & was_reset){message("Warning: Camera was reset!")}
   return(output)
 }

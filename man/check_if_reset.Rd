@@ -2,13 +2,18 @@
 % Please edit documentation in R/check_if_reset.R
 \name{check_if_reset}
 \alias{check_if_reset}
-\title{Checks if blackfly has been restarted during transect}
+\title{Checks if camera has been restarted during transect}
 \usage{
-check_if_reset(cam_filepath)
+check_if_reset(cam_filepath, display_warning = TRUE,
+  return_idx = FALSE)
 }
 \arguments{
 \item{cam_filepath}{vector of filepaths from blackfly camera}
+
+\item{display_warning}{Logical indicating whether a warning should be displayed if restart is detected}
+
+\item{return_idx}{Logical indicating whether the index of where the restart occurred should also be returned}
 }
 \description{
-Checks if blackfly has been restarted during transect seeing if gigegrab number goes to 0 anywhere that is not the start
+Checks if camera has been restarted during transect by seeing if frames where written to different directories. Optionally can return index where restart occurred (Gives index of first value after restart).
 }
