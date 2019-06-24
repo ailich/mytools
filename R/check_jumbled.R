@@ -15,5 +15,5 @@ check_jumbled<- function(camera_table, display_warning=TRUE){
   camera_table2<- camera_table %>% arrange(timestamp, u_second) #ordered by time
   camera_table3<- camera_table %>% arrange(file_path) #ordered by frame
   is_jumbled<- !(identical(camera_table2,camera_table3) & identical(camera_table,camera_table2))
-  if (is_jumbled & display_warning){message("Warning: Camera table is jumbled")}
+  if (is_jumbled & display_warning){warning("Warning: Camera table is jumbled")}
   return(is_jumbled)}

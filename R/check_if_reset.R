@@ -24,6 +24,6 @@ check_if_reset<- function (cam_filepath, display_warning = TRUE, return_idx = FA
   if (return_idx){
     output<- data.frame(was_reset=was_reset, idx=idx)} else{
       output<- was_reset}
-  if(display_warning & was_reset){message("Warning: Camera was reset!")}
+  if(display_warning & was_reset){warning("Warning: Camera was reset!")}
   return(output)
 }

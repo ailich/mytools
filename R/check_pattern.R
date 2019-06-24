@@ -16,7 +16,7 @@ check_pattern<- function(cam_filepath, display_warning=TRUE){
   if(length(my_pattern)==1){
     output<- TRUE} else{
       output<- FALSE}
-  if((length(my_pattern) < 1) & display_warning){message("Warning: no patterns avialable")}
-  if((length(my_pattern) > 1) & display_warning){message("Warning: Multiple patterns avialable")}
+  if((length(my_pattern) < 1) & display_warning){warning("Warning: no patterns avialable")}
+  if((length(my_pattern) > 1) & display_warning){warning("Warning: Multiple patterns avialable")}
   return(output)
   }
