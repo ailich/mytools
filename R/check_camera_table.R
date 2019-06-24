@@ -7,14 +7,13 @@
 #' @export
 
 check_camera_table<- function(camera_table, display_warning=TRUE){
-  one_pattern<- check_pattern(camera_table$file_path, display_warning=display_warning)
-  if(!one_pattern){
-    return("pattern")} else if(one_pattern){
-      was_reset<- check_if_reset(camera_table$file_path, display_warning = display_warning)
-      if(was_reset){
-        return("reset")}} else if (!was_reset){
-          is_jumbled<- check_jumbled(camera_table, display_warning=display_warning)
-          if(is_jumbled){return("jumbled")}} else {
-            return("none")}}
+  pattern_issue<- !check_pattern(camera_table$file_path, display_warning=display_warning)
+  reset_issue<- check_if_reset(camera_table$file_path, display_warning = display_warning)
+  jumbled_issue<- check_jumbled(camera_table, display_warning=display_warning)
+  idx<- c(pattern_issue, reset_issue, jumbled_issue)
+  issues<- c("pattern", "reset", "jumbled")
+  table_issue<- issues[idx][1]#Choose first issue
+  if(is.na(table_issue)){table_issue<- "none"}
+  return(table_issue)}
 
 
