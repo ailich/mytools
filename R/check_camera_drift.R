@@ -69,7 +69,7 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
       vid_files<- sort(list.files(path = paste(transect_dir, camera_folder_name, sub_dirs[j], sep="/"), pattern = "\\.avi$", full.names = TRUE))
       if(length(vid_files)==0){
         warning("no videos in dir")
-        new_row<- tibble(Transect=paste0(CBASS_transects[i], "_", sub_dirs[j]), st_time= NA, end_time = NA, Vid_drift=NA_real_, fps_mosaic = NA_real_, fps_rec = NA_real_, i=i, j=j, table_issue=NA_character_, n_frames_diff= NA_integer_, correction_factor=NA_real_, transect_dur_mins = NA_real_, vid_dur_mins = NA_real_, n_frames =NA_integer_, max_frame_diff= NA_real_, table_path = paste(table_dir, curr_table_name, sep="/"), skip_reason = "No Videos")
+        new_row<- tibble(Transect=paste0(CBASS_transects[i], "_", sub_dirs[j]), st_time= NA, end_time = NA, Vid_drift=NA_real_, fps_mosaic = NA_real_, fps_rec = NA_real_, i=i, j=j, table_issue=NA_character_, n_frames_diff= NA_integer_, correction_factor=NA_real_, transect_dur_mins = NA_real_, vid_dur_mins = NA_real_, n_frames =NA_integer_, max_frame_diff= NA_real_, table_path = NA_character_, skip_reason = "No Videos")
         output<- bind_rows(output, new_row)
         next}
 
