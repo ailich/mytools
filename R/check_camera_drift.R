@@ -47,8 +47,10 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
   CBASS_transects<- list.files(CBASS_dir) #Get all CBASS Transect Names from Cruise
   CBASS_transects<- CBASS_transects[!grepl(pattern = "\\.", CBASS_transects)] #Removes non transect files (e.g. pdf files) from transect list
   CBASS_transects<- CBASS_transects[!grepl(pattern = "Sensor Excel", CBASS_transects)] #Remove Sensor Excel File from transect list
+  keep_vars_i<- c(ls(), "i", "keep_vars_i") #Set Variables to keep after incrementing i
 
   for (i in 1:length(CBASS_transects)) {
+    rm(list= ls()[!(ls() %in% keep_vars_i)]) #Remove variables to prevent values from carrying on to next iteration by mistake
     transect_dir<- paste(CBASS_dir, CBASS_transects[i], sep="/")
     print(paste0("Begin ", transect_dir, " (",i,"/",as.character(length(CBASS_transects)),")"))
     check_val<- sum(grepl(pattern = camera_folder_name, list.files(transect_dir))) > 0 & sum(grepl(pattern = "tables", list.files(transect_dir))) > 0
@@ -59,12 +61,18 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
     sub_dirs<- list.files(paste(transect_dir, camera_folder_name, sep="/")) #Subdirs of camera folder
     sub_dirs<- sub_dirs[!grepl(pattern = "\\.", sub_dirs)] #Remove stray files
     sub_dirs2<- list.files(paste(transect_dir, "tables", sep="/")) #Subdirs of table folder
-    sub_dirs2<- sub_dirs2[!grepl(pattern = "\\.", sub_dirs)] #Remove stray files
-
-    if(length(sub_dirs)==0){sub_dirs=""} #Deal with no subdirs
+    sub_dirs2<- sub_dirs2[!grepl(pattern = "\\.", sub_dirs2)] #Remove stray files
     sub_dirs
-    if(length(sub_dirs2)==0){sub_dirs2=""} #Deal with no subdirs
+    if(length(sub_dirs2)==0){sub_dirs2<- ""} #Deal with no table subdirs (e.g. Feb 2016)
+    if(length(sub_dirs)==0) { #Should always be subdirs for camera folders
+      warning(paste("no subdirs in", paste(transect_dir, camera_folder_name, sep="/")))
+      new_row<- tibble(Transect=paste0(CBASS_transects[i], "_", sub_dirs[j]), st_time= NA, end_time = NA, Vid_drift=NA_real_, fps_mosaic = NA_real_, fps_rec = NA_real_, i=i, j= NA_real_, table_issue=NA_character_, n_frames_diff= NA_integer_, correction_factor=NA_real_, transect_dur_mins = NA_real_, vid_dur_mins = NA_real_, n_frames =NA_integer_, max_frame_diff= NA_real_, table_path = NA_character_, skip_reason = "no camera subdirs")
+    output<- bind_rows(output, new_row)
+    next}
+
+    keep_vars_j<- c(ls(), "j", "keep_vars_j") #Set Variables to keep after incrementing j
     for (j in 1:length(sub_dirs)) { #Loop through subdirectories
+      rm(list= ls()[!(ls() %in% keep_vars_j)]) #Remove variables to prevent values from carrying on to next iteration by mistake
       print(paste("    ", "subdirectory", sub_dirs[j]))
       vid_files<- sort(list.files(path = paste(transect_dir, camera_folder_name, sub_dirs[j], sep="/"), pattern = "\\.avi$", full.names = TRUE))
       if(length(vid_files)==0){
@@ -82,10 +90,11 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
         table_dir<- paste(transect_dir, "tables", sub_dirs[j], sep="/")
         curr_table_name<- table_name}
       curr_table_name
-      if ((!file.exists(table_dir)) & sub_dirs2[j]=="" & length(sub_dirs==1) & length(sub_dirs2)==1){
+      if ((!file.exists(table_dir)) & (sub_dirs2[1] =="") & (length(sub_dirs2)==1)){
         table_dir<- paste(transect_dir, "tables", sep="/") #Account for if no subdir in table folder (Feb 2016)
-      } else if (!(sub_dirs[j] %in% sub_dirs2)){ #Make sure subdirs of tables and camera folder match
-        warning(paste("mismatched subdirs"))
+      } else if ((!file.exists(table_dir)) & (sub_dirs2[1] =="combined") & (length(sub_dirs2)==1)){table_dir<- paste(transect_dir, "tables", "combined", sep="/") #Account if tables in a single dir named combined
+        }else if (!(sub_dirs[j] %in% sub_dirs2)){ #Make sure subdirs of tables and camera folder match
+          warning(paste("mismatched subdirs"))
         new_row<- tibble(Transect=paste0(CBASS_transects[i], "_", sub_dirs[j]), st_time= NA, end_time = NA, Vid_drift=NA_real_, fps_mosaic = NA_real_, fps_rec = NA_real_, i=i, j=j, table_issue=NA_character_, n_frames_diff= NA_integer_, correction_factor=NA_real_, transect_dur_mins = NA_real_, vid_dur_mins = NA_real_, n_frames =NA_integer_, max_frame_diff= NA_real_, table_path = paste(table_dir, curr_table_name, sep="/"), skip_reason = "mismatched subdirs")
         output<- bind_rows(output, new_row)
         next}
@@ -114,16 +123,10 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
       }
       my_pattern<- detect_cam_pattern(pic_table$file_path)
       my_pattern
-      if (table_issue =="reset" & sub_dirs[j]!=""){
+      if (table_issue =="reset"){
         warning(paste(curr_table_name, "is", table_issue))
         pic_table<- pic_table %>% filter(grepl(pattern= sub_dirs[j], x = pic_table$file_path))
       } #Filter pic table to deal with resets based on subdir name
-
-      if (table_issue =="reset" & sub_dirs[j]==""){
-        warning(paste(curr_table_name, "is", table_issue, "and was reset"))
-        new_row<- tibble(Transect=paste0(CBASS_transects[i], "_", sub_dirs[j]), st_time= NA, end_time = NA, Vid_drift=NA_real_, fps_mosaic = NA_real_, fps_rec = NA_real_, i=i, j=j, table_issue=table_issue, n_frames_diff= NA_integer_, correction_factor=NA_real_, transect_dur_mins = NA_real_, vid_dur_mins = NA_real_, n_frames=NA_integer_, max_frame_diff= NA_real_, table_path = paste(table_dir, curr_table_name, sep="/"), skip_reason = "reset with no subdir name")
-        output<- bind_rows(output, new_row)
-        next} #Cannot Filter pic table to deal with resets without subdir name
 
       if (table_issue =="jumbled"){warning(paste(curr_table_name, "is", table_issue))}
 
@@ -193,6 +196,7 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
     }
   }
   output$correction_factor[abs(output$max_frame_diff) > max_diff_thresh]<- NA_real_ #Remove correction factor id max_frame_diff is greater than threshold as substantial part of calculated Vid_drift is probably due to clock resynching
+  output<- output %>% select(everything(), table_path) #Reorder cols
   options(warn=warn_behavior)
   return(output)
 }

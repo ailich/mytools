@@ -8,12 +8,22 @@
 
 check_camera_table<- function(camera_table, display_warning=TRUE){
   pattern_issue<- !check_pattern(camera_table$file_path, display_warning=display_warning)
+  if((!is.logical(pattern_issue)) | (is.na(pattern_issue))){
+    message("Error checking camera table")}
+  if(pattern_issue){return("pattern")}
+
   reset_issue<- check_if_reset(camera_table$file_path, display_warning = display_warning)
+  if((!is.logical(reset_issue)) | (is.na(reset_issue))){
+    message("Error checking camera table")}
+  if(reset_issue){return("reset")}
+
   jumbled_issue<- check_jumbled(camera_table, display_warning=display_warning)
-  idx<- c(pattern_issue, reset_issue, jumbled_issue)
-  issues<- c("pattern", "reset", "jumbled")
-  table_issue<- issues[idx][1]#Choose first issue
-  if(is.na(table_issue)){table_issue<- "none"}
-  return(table_issue)}
+  if((!is.logical(jumbled_issue)) | (is.na(jumbled_issue))){
+    message("Error checking camera table")}
+  if(jumbled_issue){return("jumbled")}
+
+  if(pattern_issue==FALSE & reset_issue==FALSE & jumbled_issue==FALSE){
+    return("none")} else{message("Error checking camera table")}
+  }
 
 
