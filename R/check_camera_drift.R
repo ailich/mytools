@@ -196,7 +196,7 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
     }
   }
   output$correction_factor[abs(output$max_frame_diff) > max_diff_thresh]<- NA_real_ #Remove correction factor id max_frame_diff is greater than threshold as substantial part of calculated Vid_drift is probably due to clock resynching
-  output<- output %>% select(everything(), table_path) #Reorder cols
+  output<- output %>% select(-table_path, table_path) #Reorder cols
   options(warn=warn_behavior)
   return(output)
 }
