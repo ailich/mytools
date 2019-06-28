@@ -66,7 +66,7 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
     if(length(sub_dirs2)==0){sub_dirs2<- ""} #Deal with no table subdirs (e.g. Feb 2016)
     if(length(sub_dirs)==0) { #Should always be subdirs for camera folders
       warning(paste("no subdirs in", paste(transect_dir, camera_folder_name, sep="/")))
-      new_row<- tibble(Transect=paste0(CBASS_transects[i], "_", sub_dirs[j]), st_time= NA, end_time = NA, Vid_drift=NA_real_, fps_mosaic = NA_real_, fps_rec = NA_real_, i=i, j= NA_real_, table_issue=NA_character_, n_frames_diff= NA_integer_, correction_factor=NA_real_, transect_dur_mins = NA_real_, vid_dur_mins = NA_real_, n_frames =NA_integer_, max_frame_diff= NA_real_, table_path = NA_character_, skip_reason = "no camera subdirs")
+      new_row<- tibble(Transect=paste0(CBASS_transects[i]), st_time= NA, end_time = NA, Vid_drift=NA_real_, fps_mosaic = NA_real_, fps_rec = NA_real_, i=i, j= NA_real_, table_issue=NA_character_, n_frames_diff= NA_integer_, correction_factor=NA_real_, transect_dur_mins = NA_real_, vid_dur_mins = NA_real_, n_frames =NA_integer_, max_frame_diff= NA_real_, table_path = NA_character_, skip_reason = "no camera subdirs")
     output<- bind_rows(output, new_row)
     next}
 
