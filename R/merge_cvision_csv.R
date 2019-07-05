@@ -42,7 +42,7 @@ merge_cvision_csv<- function(file_list=list.files(pattern = "\\.csv$"), frames_p
   fish<- fish[-1,] #Remove first row of NA's
   dup_check<- fish %>% group_by(video, file_name) %>% count()
   if(sum(duplicated(dup_check$video))>0){
-    message("Error: one video has multiple associated csvs")
+    message(paste("Error:", as.character(sum(duplicated(dup_check$video))), "video(s) have multiple associated csvs"))
     stop()}
   return(fish)
 }
