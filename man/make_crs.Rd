@@ -4,10 +4,12 @@
 \alias{make_crs}
 \title{Makes a proj4 string of common coordinate systems/datums for my project}
 \usage{
-make_crs(x)
+make_crs(x, exclude_epsg = FALSE)
 }
 \arguments{
 \item{x}{desired coordinate system/datum}
+
+\item{exclude_epsg}{logical indicating whether to exclude +init=epsg: at beginning of proj4 string}
 }
 \description{
 Makes proj4 string for WGS84, UTM 16N, and UTM 17N.
