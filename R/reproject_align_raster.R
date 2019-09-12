@@ -7,7 +7,15 @@
 #' @param desired_res  desired resolution of output raster. Either an integer or a vector of length 2 (x,y)
 #' @param desired_crs desired coordinate reference system of output raster (CRS class)
 #' @param method resampling method. Either "bilinear" for bilinear interpolation (the default), or "ngb" for using the nearest neighbor
-#' @import raster
+#' @importFrom  raster crs
+#' @importFrom  raster extent
+#' @importFrom  raster origin
+#' @importFrom  raster extent
+#' @importFrom  raster projectExtent
+#' @importFrom raster raster
+#' @importFrom raster raster
+#' @importFrom raster resample
+#' @importFrom raster projectRaster
 #' @export
 
 reproject_align_raster<- function(rast, ref_rast=NULL, desired_origin, desired_res, desired_crs, method= "bilinear"){
