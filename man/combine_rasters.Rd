@@ -6,7 +6,7 @@
 \usage{
 combine_rasters(raster_list, ref_rast = NULL, desired_origin,
   desired_res, desired_crs, method = "bilinear",
-  display_progress = TRUE)
+  display_progress = TRUE, normalize = FALSE)
 }
 \arguments{
 \item{raster_list}{a list of rasters}
@@ -22,6 +22,8 @@ combine_rasters(raster_list, ref_rast = NULL, desired_origin,
 \item{method}{resampling method. Either "bilinear" for bilinear interpolation (the default), or "ngb" for using the nearest neighbor}
 
 \item{display_progress}{Logical specifying whether or not to indicate progress}
+
+\item{normalize}{Logical (False by Default) indicating whether to z-score normalize raster layer before merge (Useful for merging backscatter)}
 
 \item{rast}{raster to be reprojected or resampled}
 }
