@@ -10,6 +10,10 @@ train_val(my_data, hab_col, prop_val, seed = NULL)
 \item{my_data}{a spatialpoints dataframe containing, dataframe, or tibble containing all data}
 
 \item{hab_col}{number specifying the column to check}
+
+\item{prop_val}{proportion of samples to be used in validation}
+
+\item{seed}{sampling is initiated by set.seed(seed) if input is not NULL. This will generate consistent results}
 }
 \description{
 Splits data into training and validation samples. Uses stratified random sampling without replacement. Will randomly draw the specified proportion without replacement from each class to generate validation data. Training set is the original data with the observations from validation data removed. Returns a list containing training data as the first element and validation data as the second element. The list elements will be the same data type as the input of my_data

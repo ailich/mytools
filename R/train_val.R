@@ -3,12 +3,12 @@
 #' Splits data into training and validation samples. Uses stratified random sampling without replacement. Will randomly draw the specified proportion without replacement from each class to generate validation data. Training set is the original data with the observations from validation data removed. Returns a list containing training data as the first element and validation data as the second element. The list elements will be the same data type as the input of my_data
 #' @param my_data a spatialpoints dataframe containing, dataframe, or tibble containing all data
 #' @param hab_col number specifying the column to check
-#' @prop_val proportion of samples to be used in validation
-#' @seed sampling is initiated by set.seed(seed) if input is not NULL. This will generate consistent results
-#' @export
+#' @param prop_val proportion of samples to be used in validation
+#' @param seed sampling is initiated by set.seed(seed) if input is not NULL. This will generate consistent results
 #' @import dplyr
 #' @import magrittr
 #' @import tibble
+#' @export
 
 train_val<- function(my_data, hab_col, prop_val, seed=NULL){
   isadataframe<- is.data.frame(my_data) & !is_tibble(my_data)

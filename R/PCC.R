@@ -4,8 +4,6 @@
 #' @param my_data a vector or one column dataframe/tibble
 #' @param acc Accuracy of classifier
 #' @param iter Number of iterations to run
-#' @prop_val proportion of samples to be used in validation
-#' @seed sampling is initiated by set.seed(seed) if input is not NULL. This will generate consistent results
 #' @export
 
 PCC<- function(my_data, acc, iter){
