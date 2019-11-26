@@ -2,18 +2,18 @@
 % Please edit documentation in R/make_crs.R
 \name{make_crs}
 \alias{make_crs}
-\title{Makes a proj4 string of common coordinate systems/datums for my project}
+\title{Makes a proj4 string based on EPSG code or name of common coordinate systems/datums for my project}
 \usage{
 make_crs(x, exclude_epsg = FALSE)
 }
 \arguments{
-\item{x}{desired coordinate system/datum}
+\item{x}{desired coordinate system/datum or EPSG code}
 
 \item{exclude_epsg}{logical indicating whether to exclude +init=epsg: at beginning of proj4 string}
 }
 \description{
 Makes proj4 string for WGS84, UTM 16N, and UTM 17N.
-"WGS84": datum = WGS84, projection = lat/long
-"UTM 16N": datum WGS84, projection = UTM 16N
-"UTM 17N": datum WGS84, projection = UTM 17N
+"WGS84": datum = WGS84, projection = lat/long (epsg:4326)
+"UTM 16N": datum WGS84, projection = UTM 16N (epsg:32616)
+"UTM 17N": datum WGS84, projection = UTM 17N (epsg:32617)
 }
