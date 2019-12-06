@@ -13,6 +13,5 @@ RDMV<- function(bathy, window_size=c(3,3), na.rm=FALSE){
   local_max<- focal(x = bathy, w= matrix(1, nrow = window_size[1], ncol = window_size[2]), fun=max, na.rm = na.rm)
   local_min<- focal(x = bathy, w= matrix(1, nrow = window_size[1], ncol = window_size[2]), fun=min, na.rm = na.rm)
   rdmv<- (bathy - local_mean)/(local_max-local_min)
-  rdmv[local_max==local_min]<- 0 #Fix divide by 0 issue (These areas are flat so should be 0)
   return(rdmv)
 }

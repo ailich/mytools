@@ -15,7 +15,6 @@ TASSE<- function(bathy, na.rm=FALSE, return_aspect=FALSE){
   localmax<- focal(x = bathy, w= matrix(1, nrow = 3, ncol = 3), fun=max, na.rm = na.rm)
   localmin<- focal(x = bathy, w= matrix(1, nrow = 3, ncol = 3), fun=min, na.rm = na.rm)
   rdmv<- (bathy - localmean)/(localmax-localmin)
-  rdmv[localmax==localmin]<- 0 #Fix divide by 0 issue (These areas are flat so should be 0)
   names(rdmv)<- "rdmv"
   slope<- raster::terrain(x = bathy, opt = "slope", unit = "degrees", neighbors = 8)
   aspect<- raster::terrain(x = bathy, opt = "aspect", unit = "radians", neighbors = 8)
