@@ -7,10 +7,11 @@
 #' @param use_circle logical specifying whether or not to use a circular neighborhood (default is FALSE)
 #' @importFrom raster focal
 #' @importFrom raster focalWeight
+#' @importFrom raster res
 #' @export
 
 TPI<- function(bathy, window_size=c(3,3), na.rm=FALSE, use_circle=FALSE){
-  if(res(bathy)[1]!=res(bathy)[2]){ warning("x and y res are unequal")}
+  if(raster::res(bathy)[1]!=raster::res(bathy)[2]){ warning("x and y res are unequal")}
   if (!use_circle){
     if(length(window_size)==1){window_size<- rep(window_size, 2)}
     w <- matrix(1, nrow=window_size[1], ncol=window_size[2])
