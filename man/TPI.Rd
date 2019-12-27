@@ -11,8 +11,6 @@ TPI(bathy, window_size = c(3, 3), na.rm = FALSE, use_circle = FALSE)
 
 \item{window_size}{For rectangular window, it is a vector (or integer) specifying dimensions of window in rows and columns (default is 3x3). Window size must be odd. For a circular neighborhood this value represents diameter in map units (e.g. meters).}
 
-\item{na.rm}{logical. If TRUE, NA will be removed from focal computations. The result will only be NA if all focal cells are NA}
-
 \item{use_circle}{logical specifying whether or not to use a circular neighborhood (default is FALSE)}
 }
 \description{

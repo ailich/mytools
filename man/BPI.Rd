@@ -19,12 +19,11 @@ BPI(bathy, inner_rad, outer_rad, rad_units = "cell",
 
 \item{standardize}{logical specifying whether or not to "standardize the BPI grid" (z-score). Default is FALSE}
 
-\item{na.rm}{logical. If TRUE, NA will be removed from focal computations. The result will only be NA if all focal cells are NA (Default is FALSE)}
-
 \item{parallel}{logical specifying whether or not to run in parallel}
 
 \item{ncores}{number of cores to use if running in parallel}
 }
 \description{
 Calculates Bathymetric Position Index (the difference between a central pixel and the mean of the values in the specified annulus). Positive values inidcate a crest, while negative values indicate a depression. 0 value is flat.
+CURRENTLY DOES NOT MATCH VALUES FROM BENTHIC TERRAIN MODELLER
 }

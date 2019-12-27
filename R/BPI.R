@@ -1,13 +1,13 @@
 #' Calculates Bathymetric Position Index
 #'
 #' Calculates Bathymetric Position Index (the difference between a central pixel and the mean of the values in the specified annulus). Positive values inidcate a crest, while negative values indicate a depression. 0 value is flat.
+#' CURRENTLY DOES NOT MATCH VALUES FROM BENTHIC TERRAIN MODELLER
 #'
 #' @param bathy bathymetry raster
 #' @param inner_rad Inner radius of annulus
 #' @param outer_rad Outer radius of annulus
 #' @param round_values logical specifying whether or not to round values to nearest integer (FALSE by default, but BTM algorithm in ArcGIS rounds by default)
 #' @param standardize logical specifying whether or not to "standardize the BPI grid" (z-score). Default is FALSE
-#' @param na.rm logical. If TRUE, NA will be removed from focal computations. The result will only be NA if all focal cells are NA (Default is FALSE)
 #' @param parallel logical specifying whether or not to run in parallel
 #' @param ncores number of cores to use if running in parallel
 #' @importFrom raster focal
@@ -18,7 +18,6 @@
 #' @importFrom raster endCluster
 #' @importFrom raster clusterR
 #' @importFrom parallel detectCores
-#' @export
 
 BPI<- function(bathy, inner_rad, outer_rad, rad_units="cell", round_values= FALSE, standardize= FALSE, na.rm=FALSE, parallel=FALSE, ncores=parallel::detectCores()-1){
   out_name<- paste0("BPI_", as.character(inner_rad),"x", as.character(outer_rad), "_", rad_units)
@@ -49,11 +48,12 @@ BPI<- function(bathy, inner_rad, outer_rad, rad_units="cell", round_values= FALS
     message("algorithm failed to create windows properly")
     stop()}
   w<- outer_w - inner_w #Annulus window
+  w[w>0]<- 1/sum(w>0) #Set weights to sum to 1
   if(parallel){
     raster::beginCluster(ncores)
-    output<- bathy - raster::clusterR(x=bathy, fun = raster::focal, args= list(w=w, fun= mean, na.rm=na.rm)) #Calculate BPI
+    output<- bathy - raster::clusterR(x=bathy, fun = raster::focal, args= list(w=w, fun= sum, na.rm=FALSE)) #Calculate BPI
     raster::endCluster()} else{
-        output<- bathy - raster::focal(x=bathy, w=w, fun=mean, na.rm=na.rm)} #Calculate BPI
+        output<- bathy - raster::focal(x=bathy, w=w, fun=sum, na.rm=FALSE)} #Calculate BPI
   if(standardize){
     mean_BPI<- raster::cellStats(output, stat = "mean")
     sd_BPI<- raster::cellStats(output, stat = "sd")
