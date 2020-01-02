@@ -4,14 +4,19 @@
 \alias{TPI}
 \title{Calculates Topographic Position Index}
 \usage{
-TPI(bathy, window_size = c(3, 3), na.rm = FALSE, use_circle = FALSE)
+TPI(bathy, window_size = c(3, 3), na.rm = FALSE, use_circle = FALSE,
+  pad = FALSE)
 }
 \arguments{
 \item{bathy}{bathymetry raster}
 
 \item{window_size}{For rectangular window, it is a vector (or integer) specifying dimensions of window in rows and columns (default is 3x3). Window size must be odd. For a circular neighborhood this value represents diameter in map units (e.g. meters).}
 
+\item{na.rm}{logical. If TRUE, NA will be removed from focal computations. The result will only be NA if all focal cells are NA. (Note: na.rm=TRUE will be much slower). Default is FALSE.}
+
 \item{use_circle}{logical specifying whether or not to use a circular neighborhood (default is FALSE)}
+
+\item{pad}{logical. If TRUE, additional 'virtual' rows and columns are padded to x such that there are no edge effects. Only applicable if na.rm=TRUE. Value of virtual cells is set to NA. Default is FALSE}
 }
 \description{
 Calculates Topographic Position Index (the difference between a central pixel and the mean of its surrounding cells). Unit is the unit of the input raster. Positive values inidcate a crest, while negative values indicate a depression. 0 value is flat.

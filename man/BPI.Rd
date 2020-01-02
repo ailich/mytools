@@ -4,9 +4,8 @@
 \alias{BPI}
 \title{Calculates Bathymetric Position Index}
 \usage{
-BPI(bathy, inner_rad, outer_rad, rad_units = "cell",
-  round_values = FALSE, standardize = FALSE, na.rm = FALSE,
-  parallel = FALSE, ncores = parallel::detectCores() - 1)
+BPI(bathy, inner_rad, outer_rad, rad_units = "cell", na.rm = FALSE,
+  pad = FALSE)
 }
 \arguments{
 \item{bathy}{bathymetry raster}
@@ -15,13 +14,7 @@ BPI(bathy, inner_rad, outer_rad, rad_units = "cell",
 
 \item{outer_rad}{Outer radius of annulus}
 
-\item{round_values}{logical specifying whether or not to round values to nearest integer (FALSE by default, but BTM algorithm in ArcGIS rounds by default)}
-
-\item{standardize}{logical specifying whether or not to "standardize the BPI grid" (z-score). Default is FALSE}
-
-\item{parallel}{logical specifying whether or not to run in parallel}
-
-\item{ncores}{number of cores to use if running in parallel}
+\item{pad}{logical. If TRUE, additional 'virtual' rows and columns are padded to x such that there are no edge effects. Only applicable if na.rm=TRUE. Value of virtual cells is set to NA. Default is FALSE}
 }
 \description{
 Calculates Bathymetric Position Index (the difference between a central pixel and the mean of the values in the specified annulus). Positive values inidcate a crest, while negative values indicate a depression. 0 value is flat.

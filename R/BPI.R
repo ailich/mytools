@@ -6,24 +6,14 @@
 #' @param bathy bathymetry raster
 #' @param inner_rad Inner radius of annulus
 #' @param outer_rad Outer radius of annulus
-#' @param round_values logical specifying whether or not to round values to nearest integer (FALSE by default, but BTM algorithm in ArcGIS rounds by default)
-#' @param standardize logical specifying whether or not to "standardize the BPI grid" (z-score). Default is FALSE
-#' @param parallel logical specifying whether or not to run in parallel
-#' @param ncores number of cores to use if running in parallel
+#' @param pad logical. If TRUE, additional 'virtual' rows and columns are padded to x such that there are no edge effects. Only applicable if na.rm=TRUE. Value of virtual cells is set to NA. Default is FALSE
 #' @importFrom raster focal
 #' @importFrom raster focalWeight
 #' @importFrom raster res
-#' @importFrom raster cellStats
-#' @importFrom raster beginCluster
-#' @importFrom raster endCluster
-#' @importFrom raster clusterR
-#' @importFrom parallel detectCores
+#' @export
 
-BPI<- function(bathy, inner_rad, outer_rad, rad_units="cell", round_values= FALSE, standardize= FALSE, na.rm=FALSE, parallel=FALSE, ncores=parallel::detectCores()-1){
+BPI<- function(bathy, inner_rad, outer_rad, rad_units="cell", na.rm=FALSE, pad=FALSE){
   out_name<- paste0("BPI_", as.character(inner_rad),"x", as.character(outer_rad), "_", rad_units)
-  if(standardize){
-    out_name<- paste(out_name, "std", sep="_")} else{
-      out_name<- paste(out_name, "raw", sep="_")}
   if (rad_units!="cell" & rad_units!="map"){
     message("rad_units must be 'cell' or 'map'")
     stop()}
@@ -48,19 +38,17 @@ BPI<- function(bathy, inner_rad, outer_rad, rad_units="cell", round_values= FALS
     message("algorithm failed to create windows properly")
     stop()}
   w<- outer_w - inner_w #Annulus window
-  w[w>0]<- 1/sum(w>0) #Set weights to sum to 1
-  if(parallel){
-    raster::beginCluster(ncores)
-    output<- bathy - raster::clusterR(x=bathy, fun = raster::focal, args= list(w=w, fun= sum, na.rm=FALSE)) #Calculate BPI
-    raster::endCluster()} else{
-        output<- bathy - raster::focal(x=bathy, w=w, fun=sum, na.rm=FALSE)} #Calculate BPI
-  if(standardize){
-    mean_BPI<- raster::cellStats(output, stat = "mean")
-    sd_BPI<- raster::cellStats(output, stat = "sd")
-    output<- (output- mean_BPI)/sd_BPI #Standardize BPI grid (z-score)
-    }
-  if (round_values) {output<- round(output, 0)} #round to interger values
+  if(!na.rm){
+    w[w>0]<- 1/sum(w>0) #Set weights to sum to 1
+    output<- bathy - raster::focal(x=bathy, w=w, fun=sum, na.rm=FALSE, pad=FALSE) #Calculate BPI
+      } else {
+        output<- bathy - raster::focal(x=bathy, w=w, na.rm=TRUE, pad=pad, fun = function(x, ...) {
+          valXweights<- x
+          my_weights<- as.vector(t(w))
+          my_vals<- valXweights/my_weights
+          sum(my_vals,na.rm=TRUE)/sum(my_weights, na.rm=FALSE) #weighted mean
+        }) #Calculate BPI
+        }
   names(output)<- out_name
   return(output)
-  }
-
+}
