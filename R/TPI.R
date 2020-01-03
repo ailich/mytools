@@ -21,7 +21,7 @@ TPI<- function(bathy, d=c(3,3), na.rm=FALSE, use_circle=FALSE, unit="cell", pad=
       w<- mytools::circle_window(d, resolution=res(bathy), unit= unit, type=1)
       w[ceiling(0.5 * length(w))] <- 0}
   if(!na.rm){
-    if(na.rm_type==1 & use_circle){
+    if(na.rm_type==1 | use_circle==FALSE){
       w[w>0]<- 1/sum(w>0)
       output<- bathy - raster::focal(x=bathy, w=w, fun=sum, na.rm=FALSE, pad=FALSE)} else{
         output<- bathy - raster::focal(x=bathy, w=w, na.rm=FALSE, pad=FALSE,
@@ -45,6 +45,5 @@ TPI<- function(bathy, d=c(3,3), na.rm=FALSE, use_circle=FALSE, unit="cell", pad=
   if(!use_circle){
     names(output)<- paste0("TPI_", as.character(d[1]),"x", as.character(d[2]))} else{
       names(output)<- paste0("TPI_", "circle_radius", as.character(d[1]),"_", unit)}
-  print(w)
   return(output)
 }

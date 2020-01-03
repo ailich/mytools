@@ -59,6 +59,5 @@ BPI<- function(bathy, inner_rad, outer_rad, unit="cell", na.rm=FALSE, pad=FALSE,
                                          mean(my_vals)}) #Calculate BPI
         }
   names(output)<- out_name
-  print(w)
   return(output)
 }
