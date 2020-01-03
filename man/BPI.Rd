@@ -4,8 +4,8 @@
 \alias{BPI}
 \title{Calculates Bathymetric Position Index}
 \usage{
-BPI(bathy, inner_rad, outer_rad, rad_units = "cell", na.rm = FALSE,
-  pad = FALSE)
+BPI(bathy, inner_rad, outer_rad, unit = "cell", na.rm = FALSE,
+  pad = FALSE, na.rm_type = 1)
 }
 \arguments{
 \item{bathy}{bathymetry raster}
@@ -14,7 +14,12 @@ BPI(bathy, inner_rad, outer_rad, rad_units = "cell", na.rm = FALSE,
 
 \item{outer_rad}{Outer radius of annulus}
 
-\item{pad}{logical. If TRUE, additional 'virtual' rows and columns are padded to x such that there are no edge effects. Only applicable if na.rm=TRUE. Value of virtual cells is set to NA. Default is FALSE}
+\item{unit}{unit for the radii. Either "cell" (default) or "map"}
+
+\item{na.rm}{logical. If TRUE, NA will be removed from focal computations. The result will only be NA if all focal cells are NA. (Note: na.rm=TRUE will be much slower). Default is FALSE.}
+
+\item{pad}{logical. If TRUE, additional 'virtual' rows and columns are padded to x such that there are no edge effects. Only applicable if na.rm=TRUE. Value of virtual cells is set to NA. Default is FALSE
+#' @param na.rm_type default is 1. If set to 2, when na.rm=FALSE, it will remove all zero weights values from focal window before calculating so that NA's in zero weight cells do not cause calculation to evaluate to NA (Only applicable for na.rm=FALSE, and much slower than na.rm_type=1 with na.rm=FALSE)}
 }
 \description{
 Calculates Bathymetric Position Index (the difference between a central pixel and the mean of the values in the specified annulus). Positive values inidcate a crest, while negative values indicate a depression. 0 value is flat.
