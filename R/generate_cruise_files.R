@@ -10,19 +10,29 @@
 #' @param ctd_file name of ctd files under CBASS directory. Default is "ctd_readings.tsv" (only change if there is a mistake in default data table)
 #' @param compass_file name of compass files under CBASS directory. Default is "compass_readings.tsv" (only change if there is a mistake in original default table)
 #' @param zeroed Where winch is zeroed ("water" or "block", default is water)
-#' @param GPS_Source Adds offset forward/aft offset between trawl block and GPS source. Must be "None" or "GNSS_Fwd" or "CoG" (Center of Gravity). Default is CoG.
+#' @param GPS_Source Adds offset forward/aft offset between trawl block and GPS source. Must be "None", "CoG" (Center of Gravity), "Furuno" or "Northstar". Default is CoG.
 #' @param CBASS_transect_name Name of CBASS transect. Only use if you want to generate files for just one transect.
 #' @param CBASS_transect_subdir Name of sub_dir for CBASS transect. Only use if you want to generate files for just one transect.
-#' @import lubridate
+#' @param alt_pos alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab" are supported
+#' @importFrom lubridate mdy_hms
+#' @importFrom lubridate ymd_hms
+#' @importFrom lubridate round_date
+#' @importFrom lubridate ddays
+#' @importFrom lubridate dminutes
+#' @importFrom lubridate dseconds
+#' @importFrom lubridate dmilliseconds
+#' @importFrom lubridate dmicroseconds
+#' @importFrom lubridate date
 #' @import dplyr
 #' @import readr
 #' @import ggplot2
-#' @import tidyr
+#' @importFrom tidyr gather
+#' @importFrom tidyr separate
 #' @importFrom stats median
 #' @importFrom writexl write_xlsx
 #' @export
 
-generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_dir, altimeter_file= "altimeter_readings.tsv", ctd_file= "ctd_readings.tsv",compass_file= "compass_readings.tsv", zeroed = "water", GPS_Source = "CoG", CBASS_transect_name=NULL, CBASS_transect_subdir=""){
+generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_dir, altimeter_file= "altimeter_readings.tsv", ctd_file= "ctd_readings.tsv",compass_file= "compass_readings.tsv", zeroed = "water", GPS_Source = "CoG", CBASS_transect_name=NULL, CBASS_transect_subdir="", alt_pos=""){
   #Set up messages file (DO NOT EDIT THIS)
   warn_behavior<- getOption("warn")
   options(warn = 1) #Set warnings behavior
@@ -44,19 +54,26 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
   message(paste("GPS_Source =", GPS_Source))
   message(paste("CBASS_transect_name =", CBASS_transect_name))
   message(paste("CBASS_transect_subdir =", CBASS_transect_subdir))
-  message("")
+  message(paste("alt_pos =", alt_pos))
+    message("")
   message("Warnings and other messages")
 
   ####################################################################################
   #Read in EK File(s)
-  cruise_tracks<- list.files(path= EK_dir,pattern = "\\.gps\\.csv", ignore.case = FALSE, full.names = TRUE) #List all EK cruise track files
-  EK_pos<- read_csv(cruise_tracks[1], col_types = list(.default=col_double(), GPS_date=col_character(),GPS_time=col_character(),GPS_filename=col_character()))
-  if (length(cruise_tracks)>1){
-    for (r in 2:length(cruise_tracks)){
-      curr_cruise_track<- read_csv(cruise_tracks[r], col_types = list(.default=col_double(), GPS_date=col_character(),GPS_time=col_character(),GPS_filename=col_character()))
-      EK_pos<- EK_pos %>% bind_rows(curr_cruise_track)
-    }}
-
+  if(alt_pos==""){
+    cruise_tracks<- list.files(path= EK_dir,pattern = "\\.gps\\.csv", ignore.case = FALSE, full.names = TRUE) #List all EK cruise track files
+    EK_pos<- read_csv(cruise_tracks[1], col_types = list(.default=col_double(), GPS_date=col_character(),GPS_time=col_character(),GPS_filename=col_character()))
+    if (length(cruise_tracks)>1){
+      for (r in 2:length(cruise_tracks)){
+        curr_cruise_track<- read_csv(cruise_tracks[r], col_types = list(.default=col_double(), GPS_date=col_character(),GPS_time=col_character(),GPS_filename=col_character()))
+        EK_pos<- EK_pos %>% bind_rows(curr_cruise_track)
+      }}}
+  if(alt_pos!=""){
+    if(basename(alt_pos)!="Northstar-941X---GGA.lab"){
+      message("alt_pos filename not supported")
+      stop()}
+    EK_pos<- mytools:::NorthstarGGA2EK(alt_pos)
+    EK_pos$GPS_date=as.character(EK_pos$GPS_date)} #Format alt_pos source like EK
   #Read in Ship File
   lab_File_list<- list.files(Ship_dir, pattern = "Northstar-941X---GPVTG.*lab", full.names = TRUE)
   Ship_File<- tibble(timestamp=NA, Ship_Speed_kph=NA)[0,] #Initialize Ship File dataframe
@@ -65,8 +82,8 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
       lab_File<- read_delim(lab_File_list[q], delim = " ", col_names = FALSE, col_types = list(.default=col_double()))
       names(lab_File)[c(1,3,4,7)]<- c("Year", "Julian_Day", "Decimal_Day", "Ship_Speed_kph")
       lab_File<- lab_File %>% mutate(Seconds_In_Day = round((Decimal_Day * 24 *60 * 60),0))
-      lab_File<- lab_File %>% mutate(time_origin = mdy_hms(paste0("1-1-",as.character(Year),"-00:00:00"))) #Time orgin for Julian Day
-      lab_File<- lab_File %>% mutate(timestamp = time_origin+days(Julian_Day-1)+seconds(Seconds_In_Day))
+      lab_File<- lab_File %>% mutate(time_origin = lubridate:: mdy_hms(paste0("1-1-",as.character(Year),"-00:00:00"))) #Time orgin for Julian Day
+      lab_File<- lab_File %>% mutate(timestamp = time_origin+lubridate::ddays(Julian_Day-1)+lubridate::dseconds(Seconds_In_Day))
       lab_File<- lab_File %>% select(timestamp, Ship_Speed_kph)
       Ship_File<- bind_rows(Ship_File, lab_File)
     }}
@@ -78,7 +95,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
       Raw_File$Ship_Speed_kph<- as.numeric(Raw_File$Ship_Speed_kph)
       Raw_File<- Raw_File %>% separate(Time, into = c("Time1","Time2"), sep = "\\.")
       Raw_File<- Raw_File %>% mutate(decimal_secs = as.numeric(paste0("0.", Time2)))
-      Raw_File<- Raw_File %>% mutate(timestamp = mdy_hms(paste(Date, Time1, sep = "_")) + seconds(round(decimal_secs, digits = 0)))
+      Raw_File<- Raw_File %>% mutate(timestamp = lubridate:: mdy_hms(paste(Date, Time1, sep = "_")) + lubridate::dseconds(round(decimal_secs, digits = 0)))
       Raw_File<- Raw_File %>% select(timestamp, Ship_Speed_kph)
       Ship_File<- bind_rows(Ship_File, Raw_File)
     }}
@@ -91,7 +108,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
 
   ##################################################################
   #Edit EK File
-  EK_pos<- EK_pos %>% mutate(timestamp=round_date(ymd_hms(paste(GPS_date, GPS_time, sep="_")) + milliseconds(GPS_milliseconds), unit = "second")) #Round timestamps to nearest second
+  EK_pos<- EK_pos %>% mutate(timestamp=lubridate::round_date(lubridate::ymd_hms(paste(GPS_date, GPS_time, sep="_")) + lubridate::dmilliseconds(GPS_milliseconds), unit = "second")) #Round timestamps to nearest second
   EK_pos<- EK_pos[!duplicated(EK_pos$timestamp),] #Only retain first timestamp if there are duplicates
   #################################################################################################
   #Make EK and Shipfile at exactly 1Hz
@@ -107,7 +124,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
   if(grepl(pattern = "\\.tsv$", x = winch_dir)){ #Get payout from Alex #2 table
     payout<- read_tsv(winch_dir, col_types = list(.default=col_double(), timestamp= col_datetime()))
     payout<- payout %>%
-      mutate(timestamp= round_date(timestamp + microseconds(u_second), unit = "second"))
+      mutate(timestamp= lubridate::round_date(timestamp + lubridate::dmicroseconds(u_second), unit = "second"))
     payout<- payout %>% select(timestamp, payout)
     payout<- payout %>% group_by(timestamp) %>%
       summarise(Payout_m = stats::median(payout, na.rm=TRUE)) %>%
@@ -149,11 +166,11 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
         warning(paste(curr_dir, "has empty CBASS tables"))
         next} #Advance to next iteration if CBASS tables are unpopulated
       alt<- alt %>%
-        mutate(timestamp = round_date(timestamp+microseconds(u_second), unit = "second"))
+        mutate(timestamp = lubridate::round_date(timestamp+lubridate::dmicroseconds(u_second), unit = "second"))
       ctd<- ctd %>%
-        mutate(timestamp = round_date(timestamp+microseconds(u_second), unit = "second"))
+        mutate(timestamp = lubridate::round_date(timestamp+lubridate::dmicroseconds(u_second), unit = "second"))
       compass<- compass %>%
-        mutate(timestamp = round_date(timestamp+microseconds(u_second), unit = "second"))#Round to nearest second
+        mutate(timestamp = lubridate::round_date(timestamp+lubridate::dmicroseconds(u_second), unit = "second"))#Round to nearest second
 
       alt<- alt %>%
         group_by(timestamp) %>%
@@ -169,7 +186,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
         ungroup() #Get median value for each timestamp
 
       st_time<- min(with_tz(c(alt$timestamp, ctd$timestamp, compass$timestamp),"UTC"), na.rm = TRUE) #Get Transect Start Time
-      st_time<- st_time - minutes(3) #Add 3 minute buffer
+      st_time<- st_time - lubridate::dminutes(3) #Add 3 minute buffer
       end_time<- max(with_tz(c(alt$timestamp, ctd$timestamp, compass$timestamp),"UTC"), na.rm=TRUE) #Get Transect end Time
       transect_df<- data.frame(timestamp= seq.POSIXt(from = st_time, to = end_time, by = "sec")) #Create 1Hz table for transect
 
@@ -194,7 +211,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
       if(length(which(is.nan(transect_df$k1_Layback_m)))>0){
         warning(paste("Depth may exceed payout. Nan's produced in Layback_m for", curr_dir))}
       transect_df<- transect_df %>% mutate(k1_Layback_sec = k1_Layback_m/Ship_Speed_mps_1minAvg)
-      transect_df<- transect_df %>% mutate(Time_To_Match= round_date(timestamp - seconds(k1_Layback_sec), unit = "second"))
+      transect_df<- transect_df %>% mutate(Time_To_Match= lubridate::round_date(timestamp - lubridate::dseconds(k1_Layback_sec), unit = "second"))
       transect_df<- transect_df %>% mutate(k1_CBASS_Lat=NA_real_) %>% mutate(k1_CBASS_Lon=NA_real_)
       for (k in 1:nrow(transect_df)) {
         idx<- which(EK_pos2$timestamp == transect_df$Time_To_Match[k])
@@ -204,7 +221,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
         }} #Get Ship Position lagged by layback time
       transect_df<- transect_df %>% select(-Time_To_Match)
       output_filename<- paste0(CBASS_transects[i], "_", sub_dirs[j])
-      start_date<- as.character(date(transect_df$timestamp[1]))
+      start_date<- as.character(lubridate::date(transect_df$timestamp[1]))
       my_data<- transect_df %>% select(timestamp, Payout_m, CBASS_Depth, Ship_Speed_mps, Ship_Speed_mps_1minAvg) %>% gather(key = "type", value = "value", -timestamp) #Format data for plot
       depth_payout_idx<- my_data$type=="CBASS_Depth" | my_data$type=="Payout_m"
       my_data$value[depth_payout_idx]<- -1* my_data$value[depth_payout_idx]

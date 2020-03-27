@@ -4,8 +4,7 @@
 #' @param cam_filepath vector of filepaths from blackfly camera
 #' @param display_warning Logical indicating whether a warning should be displayed if issue detected
 #' @import dplyr
-#' @import magrittr
-#' @import stringr
+#' @importFrom stringr str_replace_all
 #' @export
 
 check_pattern<- function(cam_filepath, display_warning=TRUE){

@@ -5,7 +5,6 @@
 #' @param camera_table camera table
 #' @param display_warning Logical indicating whether a warning should be displayed
 #' @import dplyr
-#' @import magrittr
 #' @export
 
 check_jumbled<- function(camera_table, display_warning=TRUE){

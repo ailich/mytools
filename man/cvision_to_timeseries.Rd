@@ -12,15 +12,15 @@ cvision_to_timeseries(merged_cvision_csv, window_size, vid_start = 0,
 
 \item{window_size}{size of sliding window in frames}
 
+\item{vid_start}{number of start video (default=0)}
+
 \item{vid_end}{number of end video}
+
+\item{vid_length}{length of video in minutes (default=1)}
 
 \item{fps}{frames per second of videos}
 
 \item{by_species}{If TRUE (default) will generate a time-series for each species. If FALSE will create one general time series}
-
-\item{vid_start=0}{number of start video}
-
-\item{vid_length=1}{length of video in minutes}
 }
 \description{
 Uses a sliding window of specified size to convert a merged_cvision_csv to fish time-series for all species by summing all observations within that window

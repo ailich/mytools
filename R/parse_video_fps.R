@@ -2,7 +2,8 @@
 #'
 #' Parses fps of video from output of video_info function
 #' @param vid_info output from video_info function
-#' @import magrittr
+#' @import dplyr
+#' @importFrom stringr str_extract
 #' @export
 
 parse_video_fps<-function(vid_info){

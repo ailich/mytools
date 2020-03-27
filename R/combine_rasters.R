@@ -2,7 +2,6 @@
 #'
 #' Combines multiple rasters into one by using merge after first reprojecting or resampling and aligning rasters by matching them up with a a specified origin, resolution, and coordinate reference system, or that of a reference raster.
 #' @param raster_list a list of rasters
-#' @param rast raster to be reprojected or resampled
 #' @param ref_rast reference raster with desired properties (Alternatively can supply desired_origin, desired_res, and desired_crs)
 #' @param desired_origin desired origin of output raster as a vector with length 2 (x,y)
 #' @param desired_res  desired resolution of output raster. Either an integer or a vector of length 2 (x,y)

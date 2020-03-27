@@ -16,5 +16,6 @@ circle_window(radius, resolution = NA, unit = "cell", type = 1)
 \item{type}{Either 1 or 2. If type = "1" then weights will be 0 or 1. if type ="2", weights will sum to 1. Default is 1.}
 }
 \description{
-Creates circular focal window around central pixel (Note that radius does not include central half the length of central pixel) for raster::focal.
+Creates circular focal window around central pixel.
+https://desktop.arcgis.com/en/arcmap/10.3/analyze/arcpy-spatial-analyst/nbrcircle-class.htm
 }

@@ -8,7 +8,6 @@
 #' @param ... other arguments passed to writeRaster
 #' @importFrom raster writeRaster
 #' @importFrom stringr str_remove
-
 #' @export
 
 writeRaster2<- function(x, filename, overwrite=TRUE, ...){

@@ -3,13 +3,12 @@
 #' Uses a sliding window of specified size to convert a merged_cvision_csv to fish time-series for all species by summing all observations within that window
 #' @param merged_cvision_csv Output from merge_cvison_csv
 #' @param window_size size of sliding window in frames
-#' @param vid_start=0 number of start video
+#' @param vid_start number of start video (default=0)
 #' @param vid_end number of end video
-#' @param vid_length=1 length of video in minutes
+#' @param vid_length length of video in minutes (default=1)
 #' @param fps frames per second of videos
 #' @param by_species If TRUE (default) will generate a time-series for each species. If FALSE will create one general time series
 #' @import dplyr
-#' @import magrittr
 #' @export
 
 cvision_to_timeseries<- function(merged_cvision_csv, window_size,vid_start=0,vid_end, vid_length=1, fps, by_species=TRUE){

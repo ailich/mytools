@@ -1,6 +1,7 @@
 #' Creates circular focal window
 #'
-#' Creates circular focal window around central pixel (Note that radius does not include central half the length of central pixel) for raster::focal.
+#' Creates circular focal window around central pixel.
+#' https://desktop.arcgis.com/en/arcmap/10.3/analyze/arcpy-spatial-analyst/nbrcircle-class.htm
 
 #' @param radius radius of circular window
 #' @param resolution resolution of intended raster layer (one number or a vector of length 2). Only necessary if unit= "map"

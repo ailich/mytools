@@ -8,7 +8,7 @@ generate_cruise_files(output_dir, EK_dir, CBASS_dir, Ship_dir, winch_dir,
   altimeter_file = "altimeter_readings.tsv",
   ctd_file = "ctd_readings.tsv", compass_file = "compass_readings.tsv",
   zeroed = "water", GPS_Source = "CoG", CBASS_transect_name = NULL,
-  CBASS_transect_subdir = "")
+  CBASS_transect_subdir = "", alt_pos = "")
 }
 \arguments{
 \item{output_dir}{Directory to output files to}
@@ -29,11 +29,13 @@ generate_cruise_files(output_dir, EK_dir, CBASS_dir, Ship_dir, winch_dir,
 
 \item{zeroed}{Where winch is zeroed ("water" or "block", default is water)}
 
-\item{GPS_Source}{Adds offset forward/aft offset between trawl block and GPS source. Must be "None" or "GNSS_Fwd" or "CoG" (Center of Gravity). Default is CoG.}
+\item{GPS_Source}{Adds offset forward/aft offset between trawl block and GPS source. Must be "None", "CoG" (Center of Gravity), "Furuno" or "Northstar". Default is CoG.}
 
 \item{CBASS_transect_name}{Name of CBASS transect. Only use if you want to generate files for just one transect.}
 
 \item{CBASS_transect_subdir}{Name of sub_dir for CBASS transect. Only use if you want to generate files for just one transect.}
+
+\item{alt_pos}{alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab" are supported}
 }
 \description{
 Generates 1Hz tables for all transects within a cruise (Ship Speed, Ship position, CBASS layback, CBASS depth, CBASS altitude, CBASS Pitch, CBASS Position) as well as diagnostic plots. Can also be used to generate this for a specific transect rather than full cruise using "CBASS_transect_name" and "CBASS_transect_subdir" arguments. Will also output a file "messages.txt" that logs inputs/warnings/errors. Note: If there is an error and you cannot delete "messages.txt" you may need to run "closeAllConnections()"

@@ -6,8 +6,7 @@
 #' @param prop_val proportion of samples to be used in validation
 #' @param seed sampling is initiated by set.seed(seed) if input is not NULL. This will generate consistent results
 #' @import dplyr
-#' @import magrittr
-#' @import tibble
+#' @importFrom tibble is_tibble
 #' @export
 
 train_val<- function(my_data, hab_col, prop_val, seed=NULL){

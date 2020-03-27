@@ -7,7 +7,6 @@
 #' @param bin_size length of bins in seconds
 #' @param vid_length length of video in minutes
 #' @import dplyr
-#' @import magrittr
 #' @export
 
 bin_cvision<-function(merged_cvision_csv, start_vid, end_vid, bin_size=15, vid_length=1){

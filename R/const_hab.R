@@ -5,7 +5,6 @@
 #' @param hab_col number or name specifying the column to check
 #' @export
 #' @import dplyr
-#' @import tibble
 #' @import sp
 
 const_hab<- function(my_data, hab_col){

@@ -10,7 +10,6 @@
 #' @param vid_length video length in minutes (Not needed if hab_totalframe suppled)
 #' @param include_vid_sec Logical indicating whether or not to include Video Number and Seconds of habitat frames in output table
 #' @import dplyr
-#' @import magrittr
 #' @export
 match_cvision_fish2hab<-function(hab_totalframe=NULL, merged_cvision_csv, include_framenum=FALSE, video_num, video_sec, fps, vid_length=1, include_vid_sec=FALSE){
   if(is.null(hab_totalframe)){

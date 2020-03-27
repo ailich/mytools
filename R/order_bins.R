@@ -4,7 +4,6 @@
 #' @param percent_cover a character vector of percent cover data in ranges formatted as "lower-upper"
 #' @export
 #' @import dplyr
-#' @import magrittr
 
 order_bins<- function(percent_cover){
   bins_count<- as_tibble(table(percent_cover))

@@ -4,8 +4,6 @@
 #' @param percent_cover a character vector of percent cover data in ranges formatted as "lower-upper"
 #' @import dplyr
 #' @import stringr
-#' @import magrittr
-#' @import tibble
 
 
 order_bins2<- function(percent_cover){

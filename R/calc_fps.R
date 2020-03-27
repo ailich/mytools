@@ -8,9 +8,7 @@
 #' @param check logical indicating whether or not to check if camera was reset
 #' @importFrom lubridate dmicroseconds
 #' @import dplyr
-#' @import magrittr
-#' @import tibble
-#' @import stringr
+#' @importFrom stringr str_extract
 #' @export
 
 calc_fps<- function (cam_timestamp, u_second = rep(0, length(cam_timestamp)), cam_filepath, check = TRUE) {

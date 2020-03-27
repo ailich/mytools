@@ -2,8 +2,10 @@
 #'
 #' Parses duration of video in seconds from output of video_info function
 #' @param vid_info output from video_info function
-#' @import stringr
-#' @import magrittr
+#' @importFrom stringr str_remove
+#' @importFrom stringr str_remove_all
+#' @importFrom stringr str_extract_all
+#' @import dplyr
 #' @export
 
 parse_video_time<-function(vid_info){

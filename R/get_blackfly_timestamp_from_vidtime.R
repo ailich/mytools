@@ -10,8 +10,6 @@
 #' @param vid_length Length of each video in minutes
 #' @param fps Frames Per Second
 #' @import dplyr
-#' @import magrittr
-#' @import tibble
 #' @import stringr
 #' @export
 

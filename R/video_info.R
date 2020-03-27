@@ -3,7 +3,7 @@
 #' Uses program Media Info to extract video details
 #' @param vid_path file path of video
 #' @param Media_Info_Path Path to Media Info program
-#' @import stringr
+#' @importFrom stringr str_replace_all
 #' @export
 
 video_info<- function(vid_path, Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe"){

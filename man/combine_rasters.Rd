@@ -24,8 +24,6 @@ combine_rasters(raster_list, ref_rast = NULL, desired_origin,
 \item{display_progress}{Logical specifying whether or not to indicate progress}
 
 \item{normalize}{Logical (False by Default) indicating whether to z-score normalize raster layer before merge (Useful for merging backscatter)}
-
-\item{rast}{raster to be reprojected or resampled}
 }
 \description{
 Combines multiple rasters into one by using merge after first reprojecting or resampling and aligning rasters by matching them up with a a specified origin, resolution, and coordinate reference system, or that of a reference raster.

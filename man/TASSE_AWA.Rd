@@ -10,7 +10,11 @@ TASSE_AWA(bathy, window_size = NULL, na.rm = FALSE, opt = c(1, 2),
 \arguments{
 \item{bathy}{bathymetry (or dem) raster}
 
+\item{window_size}{a vector specifying the number of rows and columns c(nrow, ncol) or a single number if the window will have the same number of rows and columns}
+
 \item{na.rm}{whether to remove na's (default is FALSE)}
+
+\item{opt}{option for slope and aspect. 1 means calculate local mean of bathy with window size and then calculate terrain metrics using a 3x3 window on that (suffix LM). 2 means calculate terrain metrics first on raw bathymetry using a 3x3 window and then take local mean of of each within window size (suffix ATV). Both can be calculated using opt= c(1,2).}
 
 \item{return_aspect}{logical indicating whether to return aspect (default is FALSE)}
 }

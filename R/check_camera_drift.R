@@ -28,9 +28,9 @@
 #' @param Media_Info_Path Path to Media Info program
 #' @import dplyr
 #' @import readr
-#' @import magrittr
-#' @import stringr
-#' @import lubridate
+#' @importFrom stringr str_extract
+#' @importFrom stringr str_extract_all
+#' @importFrom lubridate dmicroseconds
 #' @export
 #'
 check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_name= "", vid_length=1, has_colnames= TRUE, fixed_tables_dir= NULL,fixed_tables=NULL, max_diff_thresh = 2, Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe"){
@@ -131,7 +131,7 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
       if (table_issue =="jumbled"){warning(paste(curr_table_name, "is", table_issue))}
 
       pic_table2<- pic_table %>% filter(grepl(pattern = my_pattern, x = file_path))
-      pic_table2<- pic_table2 %>% mutate(exact_time = timestamp+ microseconds(u_second))
+      pic_table2<- pic_table2 %>% mutate(exact_time = timestamp+ lubridate::dmicroseconds(u_second))
       pic_table2<- pic_table2 %>% mutate(diff=NA_real_)
       pic_table2<- pic_table2 %>% arrange(file_path)
       pic_table2<- pic_table2 %>% mutate(lag_time= lag(exact_time, n = 1)) %>% mutate(diff=as.numeric(difftime(exact_time, lag_time, units = "secs")))
@@ -169,8 +169,8 @@ check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_n
         output<- bind_rows(output, new_row)
         next}
 
-      st_time<-  pic_table$timestamp[st_idx] + microseconds(pic_table$u_second[st_idx])
-      end_time_real<-  pic_table$timestamp[end_idx] + microseconds(pic_table$u_second[end_idx])
+      st_time<-  pic_table$timestamp[st_idx] + lubridate::dmicroseconds(pic_table$u_second[st_idx])
+      end_time_real<-  pic_table$timestamp[end_idx] + lubridate::dmicroseconds(pic_table$u_second[end_idx])
       transect_dur_secs<- as.numeric(difftime(end_time_real,st_time, units = "secs"))
 
       last_vid_path<- vid_files[length(vid_files)] #path of last video

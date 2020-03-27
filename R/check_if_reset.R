@@ -5,8 +5,7 @@
 #' @param display_warning Logical indicating whether a warning should be displayed if restart is detected
 #' @param return_idx Logical indicating whether the index of where the restart occurred should also be returned
 #' @import dplyr
-#' @import magrittr
-#' @import stringr
+#' @importFrom stringr str_remove
 #' @export
 
 check_if_reset<- function (cam_filepath, display_warning = TRUE, return_idx = FALSE) {

@@ -3,7 +3,9 @@
 #' Calculates TASSE terrain attributes using an nxn window including relative deviation from mean value (rdmv), aspect, eastness, norhtnessm slope, standard deviation, and local mean. Depth is assumed to be negative values in calculation. By default if any values within window are NA, calculated value is NA. Slope and aspect are returned in degrees.
 #' (Lecours et al; 2017, Towards a framework for terrain attribute selection in environmental studies)
 #' @param bathy bathymetry (or dem) raster
+#' @param window_size a vector specifying the number of rows and columns c(nrow, ncol) or a single number if the window will have the same number of rows and columns
 #' @param na.rm whether to remove na's (default is FALSE)
+#' @param opt option for slope and aspect. 1 means calculate local mean of bathy with window size and then calculate terrain metrics using a 3x3 window on that (suffix LM). 2 means calculate terrain metrics first on raw bathymetry using a 3x3 window and then take local mean of of each within window size (suffix ATV). Both can be calculated using opt= c(1,2).
 #' @param return_aspect logical indicating whether to return aspect (default is FALSE)
 #' @importFrom raster focal
 #' @importFrom raster terrain

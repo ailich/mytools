@@ -4,10 +4,9 @@
 #' @param expected vector of expected video numbers
 #' @param file_list list of cvision csv files. If left blank will use all csvs in working directory
 #' @export
-#' @import stringr
+#' @importFrom stringr str_extract
 #' @import dplyr
-#' @import tibble
-#' @import magrittr
+
 check_cvision<- function(expected, file_list=list.files(pattern = ".csv$")){
   short_filename<- rep(NA_character_, length(file_list))
   for (i in 1:length(file_list)) {

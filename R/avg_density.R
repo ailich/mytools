@@ -8,9 +8,8 @@
 #' @param area vector of areas corresponding to observations (rows) in counts
 #' @param conf optional confidence level (0-1) (If null will return average density for each bootstrap sample)
 #' @param iter optional number of iterations for creating confidence intervals
-#' @export
 #' @import dplyr
-#' @import magrittr
+#' @export
 avg_density<- function(counts, area, iter=NULL, conf=NULL){
 #Check Inputs
 if(is.vector(counts)){
