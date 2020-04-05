@@ -13,7 +13,7 @@
 #' @param GPS_Source Adds offset forward/aft offset between trawl block and GPS source. Must be "None", "CoG" (Center of Gravity), "Furuno" or "Northstar". Default is CoG.
 #' @param CBASS_transect_name Name of CBASS transect. Only use if you want to generate files for just one transect.
 #' @param CBASS_transect_subdir Name of sub_dir for CBASS transect. Only use if you want to generate files for just one transect.
-#' @param alt_pos alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab" are supported
+#' @param alt_pos alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab" and Northstar-941X---GGA_*.Raw are supported
 #' @importFrom lubridate mdy_hms
 #' @importFrom lubridate ymd_hms
 #' @importFrom lubridate round_date
@@ -69,9 +69,6 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
         EK_pos<- EK_pos %>% bind_rows(curr_cruise_track)
       }}}
   if(alt_pos!=""){
-    if(basename(alt_pos)!="Northstar-941X---GGA.lab"){
-      message("alt_pos filename not supported")
-      stop()}
     EK_pos<- mytools:::NorthstarGGA2EK(alt_pos)
     EK_pos$GPS_date=as.character(EK_pos$GPS_date)} #Format alt_pos source like EK
   #Read in Ship File
