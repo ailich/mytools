@@ -27,5 +27,5 @@ get_payout<- function(winch_dir, trim_rows=TRUE){
     winch_acc$Payout_m<- as.numeric(winch_acc$Payout_m)} #ensure payout is a numeric class
   if (trim_rows){
     winch_acc<- winch_acc %>% group_by(timestamp) %>% summarize(Payout_m= median(Payout_m, na.rm=TRUE)) %>% ungroup()} #Average readings by timestamp
-  winch_acc<- winch_acc %>% mutate(timestamp=mdy_hms(timestamp)) %>% arrange(timestamp) %>% select(timestamp, Payout_m) #Sort rows by timestamp and order columns
+  winch_acc<- winch_acc %>% mutate(timestamp=lubridate::mdy_hms(timestamp)) %>% arrange(timestamp) %>% select(timestamp, Payout_m) #Sort rows by timestamp and order columns
   return(winch_acc)}

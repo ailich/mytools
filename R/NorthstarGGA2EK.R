@@ -19,7 +19,7 @@ NorthstarGGA2EK<-function(file_name){
     GGA<- GGA %>% mutate(seconds_in_day=Decimal_Day*24*60*60)
     GGA<- GGA %>% mutate(GPS_milliseconds=(seconds_in_day-floor(seconds_in_day))*1000)
     GGA<- GGA %>% mutate(datetime=GPS_date+lubridate::dseconds(floor(seconds_in_day)))
-    GGA<- GGA %>% mutate(GPS_time= strftime(datetime,format="%H:%M:%S"))
+    GGA<- GGA %>% mutate(GPS_time= strftime(datetime,format="%H:%M:%S", tz="UTC"))
     output<- GGA %>% select(GPS_date, GPS_time, GPS_milliseconds, Latitude, Longitude)
     output<- output %>% mutate(GPS_fix= 0:(nrow(output)-1), GPS_status=0, GPS_filename=file_name, Distance=NaN)
     output<- output %>% select(GPS_fix, GPS_date, GPS_time, GPS_milliseconds, Latitude, Longitude, GPS_status, GPS_filename, Distance)} else if(grepl(pattern= "Northstar-941X---GGA_.*\\.Raw$", file_name)){
