@@ -111,8 +111,8 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
   #Make EK and Shipfile at exactly 1Hz
   EK_pos2<- data.frame(timestamp = seq.POSIXt(from = min(EK_pos$timestamp, na.rm = TRUE), max(EK_pos$timestamp, na.rm=TRUE), by="sec")) #Create 1Hz Table
   EK_pos2<- EK_pos2 %>% left_join(EK_pos, by="timestamp")
-  EK_pos2<- EK_pos2 %>% mutate(Latitude_interp = interp(EK_pos2$Latitude)) #Interp Lat
-  EK_pos2<- EK_pos2 %>% mutate(Longitude_interp = interp(EK_pos2$Longitude)) #Interp Lon
+  EK_pos2<- EK_pos2 %>% mutate(Latitude_interp = interp(EK_pos2$Latitude, na.rm=TRUE)) #Interp Lat
+  EK_pos2<- EK_pos2 %>% mutate(Longitude_interp = interp(EK_pos2$Longitude, na.rm=TRUE)) #Interp Lon
 
   Ship_File2<- data.frame(timestamp = seq.POSIXt(from = min(Ship_File$timestamp, na.rm=TRUE), to = max(Ship_File$timestamp, na.rm=TRUE), by="sec")) #Create 1Hz Table
   Ship_File2<- Ship_File2 %>% left_join(Ship_File, by="timestamp")
@@ -203,6 +203,14 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
       transect_df<- transect_df %>%
         select(timestamp, pitch, altitude, depth, Latitude, Longitude, Latitude_interp, Longitude_interp, Payout_m, Ship_Speed_mps, Ship_Speed_mps_1minAvg)
       names(transect_df)[2:8]<- c("CBASS_Pitch", "CBASS_Alt", "CBASS_Depth", "Ship_Lat", "Ship_Lon", "Ship_Lat_Interp", "Ship_Lon_Interp")
+      transect_df$CBASS_Pitch<- interp(transect_df$CBASS_Pitch, na.rm = TRUE) #interpolate to fill gaps
+      transect_df$CBASS_Alt<- interp(transect_df$CBASS_Alt, na.rm = TRUE)
+      transect_df$CBASS_Depth<- interp(transect_df$CBASS_Depth, na.rm = TRUE)
+      transect_df$CBASS_Pitch[180]<- NA #Preserve 3 min buffer (filled by interp)
+      transect_df$CBASS_Alt[180]<- NA
+      transect_df$CBASS_Depth[180]<- NA
+
+
 
       transect_df<- transect_df %>% mutate(k1_Layback_m = calc_layback(payout = Payout_m, depth = CBASS_Depth, GPS_Source = GPS_Source, zeroed = zeroed, cat_fact = 1))
       if(length(which(is.nan(transect_df$k1_Layback_m)))>0){
