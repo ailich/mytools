@@ -1,16 +1,16 @@
 #' Interpolate Ship Position
 #'
-#' Interpolates the ship's approximately 2Hz data to 1Hz. Will only work if there are not Multiple NA's in a row and uniform intervals
-#' @param my_data column of ship's position data in Easting or Northing
-#' @keywords position
+#' Interpolates NA's by filling them with the average of the previous and subsequent values.
+#' @param my_data vector of data
+#' @param na.rm Logical indicating whether a logical value indicating whether NA values should be stripped before the computation proceeds.
 #' @export
 
-interp<- function(my_data){
-  new_data<- my_data
-  idx_min<- min(which(!is.na(my_data)))
-  idx<- which(is.na(my_data))
-  idx<- idx[idx_min:length(idx)]
-  if (idx[length(idx)]==length(my_data)){idx<- idx[-length(idx)]}
+interp<- function(my_data, na.rm=FALSE){
+  new_data <- my_data
+  idx_min <- min(which(!is.na(my_data))) #First non NA value (saves time b/c don't need to loop through a ton of leading NA's)
+  idx <- which(is.na(my_data))
+  idx <- idx[max(idx_min-1,1):length(idx)] #Start 1 before first non NA value or 1
   for (i in idx) {
-    new_data[i]<- mean(c(my_data[i-1], my_data[i+1]))}
+    new_data[i] <- mean(c(my_data[i - 1], my_data[i + 1]),na.rm=na.rm)
+  }
   return(new_data)}

@@ -4,12 +4,13 @@
 \alias{interp}
 \title{Interpolate Ship Position}
 \usage{
-interp(my_data)
+interp(my_data, na.rm = FALSE)
 }
 \arguments{
-\item{my_data}{column of ship's position data in Easting or Northing}
+\item{my_data}{vector of data}
+
+\item{na.rm}{Logical indicating whether a logical value indicating whether NA values should be stripped before the computation proceeds.}
 }
 \description{
-Interpolates the ship's approximately 2Hz data to 1Hz. Will only work if there are not Multiple NA's in a row and uniform intervals
+Interpolates NA's by filling them with the average of the previous and subsequent values.
 }
-\keyword{position}
