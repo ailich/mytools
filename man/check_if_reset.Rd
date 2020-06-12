@@ -4,8 +4,7 @@
 \alias{check_if_reset}
 \title{Checks if camera has been restarted during transect}
 \usage{
-check_if_reset(cam_filepath, display_warning = TRUE,
-  return_idx = FALSE)
+check_if_reset(cam_filepath, display_warning = TRUE, return_idx = FALSE)
 }
 \arguments{
 \item{cam_filepath}{vector of filepaths from blackfly camera}

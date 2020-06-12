@@ -4,8 +4,13 @@
 \alias{calc_dist}
 \title{Calculates distance CBASS has traveled}
 \usage{
-calc_dist(speed, start_time = NULL, end_time = NULL,
-  speed_units = "knots", duration = NULL)
+calc_dist(
+  speed,
+  start_time = NULL,
+  end_time = NULL,
+  speed_units = "knots",
+  duration = NULL
+)
 }
 \arguments{
 \item{speed}{speed of CBASS}

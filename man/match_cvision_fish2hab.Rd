@@ -4,9 +4,16 @@
 \alias{match_cvision_fish2hab}
 \title{Matches fish recorded in C-Vision to closest habitat frame}
 \usage{
-match_cvision_fish2hab(hab_totalframe = NULL, merged_cvision_csv,
-  include_framenum = FALSE, video_num, video_sec, fps, vid_length = 1,
-  include_vid_sec = FALSE)
+match_cvision_fish2hab(
+  hab_totalframe = NULL,
+  merged_cvision_csv,
+  include_framenum = FALSE,
+  video_num,
+  video_sec,
+  fps,
+  vid_length = 1,
+  include_vid_sec = FALSE
+)
 }
 \arguments{
 \item{hab_totalframe}{vector of total frame number of habitat observation (Alternatively could use video_num, video-sec, video_frame, fps, and vid_length)}

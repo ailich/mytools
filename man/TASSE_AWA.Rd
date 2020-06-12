@@ -4,8 +4,13 @@
 \alias{TASSE_AWA}
 \title{Calculates TASSE terrain attributes with various window sizes}
 \usage{
-TASSE_AWA(bathy, window_size = NULL, na.rm = FALSE, opt = c(1, 2),
-  return_aspect = FALSE)
+TASSE_AWA(
+  bathy,
+  window_size = NULL,
+  na.rm = FALSE,
+  opt = c(1, 2),
+  return_aspect = FALSE
+)
 }
 \arguments{
 \item{bathy}{bathymetry (or dem) raster}

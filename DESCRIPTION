@@ -7,7 +7,7 @@ Depends: R (>= 3.4.1)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Imports: 
     dplyr,
     tibble,
@@ -24,5 +24,5 @@ Imports:
     RMariaDB,
     RPyGeo,
     RQGIS3 (>= 1.0.1.9000)
-Remotes:  
+Remotes: 
     jannes-m/RQGIS3

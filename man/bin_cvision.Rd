@@ -4,8 +4,13 @@
 \alias{bin_cvision}
 \title{Collapses merged C-vision csv to time bins}
 \usage{
-bin_cvision(merged_cvision_csv, start_vid, end_vid, bin_size = 15,
-  vid_length = 1)
+bin_cvision(
+  merged_cvision_csv,
+  start_vid,
+  end_vid,
+  bin_size = 15,
+  vid_length = 1
+)
 }
 \arguments{
 \item{merged_cvision_csv}{output of merge_cvision_csv (as a dataframe or tibble)}

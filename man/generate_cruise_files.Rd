@@ -4,11 +4,21 @@
 \alias{generate_cruise_files}
 \title{Generates Cruise Files and diagnostic plots}
 \usage{
-generate_cruise_files(output_dir, EK_dir, CBASS_dir, Ship_dir, winch_dir,
+generate_cruise_files(
+  output_dir,
+  EK_dir,
+  CBASS_dir,
+  Ship_dir,
+  winch_dir,
   altimeter_file = "altimeter_readings.tsv",
-  ctd_file = "ctd_readings.tsv", compass_file = "compass_readings.tsv",
-  zeroed = "water", GPS_Source = "CoG", CBASS_transect_name = NULL,
-  CBASS_transect_subdir = "", alt_pos = "")
+  ctd_file = "ctd_readings.tsv",
+  compass_file = "compass_readings.tsv",
+  zeroed = "water",
+  GPS_Source = "CoG",
+  CBASS_transect_name = NULL,
+  CBASS_transect_subdir = "",
+  alt_pos = ""
+)
 }
 \arguments{
 \item{output_dir}{Directory to output files to}

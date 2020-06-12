@@ -4,8 +4,12 @@
 \alias{calc_fps}
 \title{Calculates frame-rate of Blackfly Camera}
 \usage{
-calc_fps(cam_timestamp, u_second = rep(0, length(cam_timestamp)),
-  cam_filepath, check = TRUE)
+calc_fps(
+  cam_timestamp,
+  u_second = rep(0, length(cam_timestamp)),
+  cam_filepath,
+  check = TRUE
+)
 }
 \arguments{
 \item{cam_timestamp}{vector of camera timestamps (must be same length as cam_filepath)}

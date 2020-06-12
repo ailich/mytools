@@ -4,8 +4,14 @@
 \alias{reproject_align_raster}
 \title{Reprojects/resamples and aligns a raster}
 \usage{
-reproject_align_raster(rast, ref_rast = NULL, desired_origin,
-  desired_res, desired_crs, method = "bilinear")
+reproject_align_raster(
+  rast,
+  ref_rast = NULL,
+  desired_origin,
+  desired_res,
+  desired_crs,
+  method = "bilinear"
+)
 }
 \arguments{
 \item{rast}{raster to be reprojected or resampled}

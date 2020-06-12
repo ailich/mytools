@@ -4,9 +4,16 @@
 \alias{get_blackfly_timestamp_from_vidtime}
 \title{Returns Blackfly Timestamp based on Video Number and Seconds in}
 \usage{
-get_blackfly_timestamp_from_vidtime(video_col, seconds_col,
-  Total_Frame = NULL, cam_timestamp, cam_filepath, test = FALSE,
-  vid_length = 1, fps = NULL)
+get_blackfly_timestamp_from_vidtime(
+  video_col,
+  seconds_col,
+  Total_Frame = NULL,
+  cam_timestamp,
+  cam_filepath,
+  test = FALSE,
+  vid_length = 1,
+  fps = NULL
+)
 }
 \arguments{
 \item{video_col}{vector of video numbers (must be same length as seconds_col)}

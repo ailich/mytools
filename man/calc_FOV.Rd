@@ -4,8 +4,17 @@
 \alias{calc_FOV}
 \title{Calculates Field of View}
 \usage{
-calc_FOV(d = NULL, f = NULL, medium, type, pix = NULL,
-  aspect_ratio = NULL, pixel_size, n_air = 1.000277, n_sea = 4/3)
+calc_FOV(
+  d = NULL,
+  f = NULL,
+  medium,
+  type,
+  pix = NULL,
+  aspect_ratio = NULL,
+  pixel_size,
+  n_air = 1.000277,
+  n_sea = 4/3
+)
 }
 \arguments{
 \item{d}{length of diagonal of camera sensor (must be same units as f)}

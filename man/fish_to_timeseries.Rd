@@ -5,8 +5,15 @@
 \title{Helper function to convert merged_merged_cvision_csv to fish time-series for a single species
 convert merged_merged_cvision_csv to fish time-series for a single species}
 \usage{
-fish_to_timeseries(merged_cvision_csv, window_size, vid_start, vid_end,
-  vid_length, fps, Start_Frames)
+fish_to_timeseries(
+  merged_cvision_csv,
+  window_size,
+  vid_start,
+  vid_end,
+  vid_length,
+  fps,
+  Start_Frames
+)
 }
 \description{
 Helper function to convert merged_merged_cvision_csv to fish time-series for a single species

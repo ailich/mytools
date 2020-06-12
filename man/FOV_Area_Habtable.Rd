@@ -4,9 +4,17 @@
 \alias{FOV_Area_Habtable}
 \title{Calculates area per habitat frame}
 \usage{
-FOV_Area_Habtable(hab_timestamps, all_timestamps, alt, pitch, speed,
-  cam_angle = 32.8, HFOV_air = 82.4, bin_size = NULL,
-  use_median = c(FALSE, FALSE, FALSE))
+FOV_Area_Habtable(
+  hab_timestamps,
+  all_timestamps,
+  alt,
+  pitch,
+  speed,
+  cam_angle = 32.8,
+  HFOV_air = 82.4,
+  bin_size = NULL,
+  use_median = c(FALSE, FALSE, FALSE)
+)
 }
 \arguments{
 \item{hab_timestamps}{vector of timestamps of habitat frames}

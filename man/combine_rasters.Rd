@@ -4,9 +4,16 @@
 \alias{combine_rasters}
 \title{Combines multiple rasters into one}
 \usage{
-combine_rasters(raster_list, ref_rast = NULL, desired_origin,
-  desired_res, desired_crs, method = "bilinear",
-  display_progress = TRUE, normalize = FALSE)
+combine_rasters(
+  raster_list,
+  ref_rast = NULL,
+  desired_origin,
+  desired_res,
+  desired_crs,
+  method = "bilinear",
+  display_progress = TRUE,
+  normalize = FALSE
+)
 }
 \arguments{
 \item{raster_list}{a list of rasters}

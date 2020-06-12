@@ -4,8 +4,16 @@
 \alias{BPI}
 \title{Calculates Bathymetric Position Index}
 \usage{
-BPI(bathy, inner_rad, outer_rad, na.rm = FALSE, pad = FALSE,
-  na.rm_type = 1, software = "R", Arc_Conn)
+BPI(
+  bathy,
+  inner_rad,
+  outer_rad,
+  na.rm = FALSE,
+  pad = FALSE,
+  na.rm_type = 1,
+  software = "R",
+  Arc_Conn
+)
 }
 \arguments{
 \item{bathy}{bathymetry raster}

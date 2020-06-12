@@ -4,8 +4,7 @@
 \alias{get_total_frame}
 \title{Calculates Total Frame Number}
 \usage{
-get_total_frame(video_num, video_sec, video_frame = NULL, fps,
-  vid_length = 1)
+get_total_frame(video_num, video_sec, video_frame = NULL, fps, vid_length = 1)
 }
 \arguments{
 \item{video_num}{vector video_numbers}

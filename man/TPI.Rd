@@ -4,8 +4,15 @@
 \alias{TPI}
 \title{Calculates Topographic Position Index}
 \usage{
-TPI(bathy, d = c(3, 3), na.rm = FALSE, use_circle = FALSE,
-  unit = "cell", pad = FALSE, na.rm_type = 1)
+TPI(
+  bathy,
+  d = c(3, 3),
+  na.rm = FALSE,
+  use_circle = FALSE,
+  unit = "cell",
+  pad = FALSE,
+  na.rm_type = 1
+)
 }
 \arguments{
 \item{bathy}{bathymetry raster}

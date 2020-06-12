@@ -4,8 +4,13 @@
 \alias{nearest_time}
 \title{Match to nearest time}
 \usage{
-nearest_time(time1, time2, unit = "secs", output_dif = FALSE,
-  break_ties = "earlier")
+nearest_time(
+  time1,
+  time2,
+  unit = "secs",
+  output_dif = FALSE,
+  break_ties = "earlier"
+)
 }
 \arguments{
 \item{time1}{vector of timestamps (class of "POSIXct" "POSIXt")}

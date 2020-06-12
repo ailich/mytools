@@ -4,8 +4,11 @@
 \alias{video_info}
 \title{Gets video details}
 \usage{
-video_info(vid_path,
-  Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe")
+video_info(
+  vid_path,
+ 
+    Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe"
+)
 }
 \arguments{
 \item{vid_path}{file path of video}

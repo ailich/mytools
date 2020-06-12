@@ -4,10 +4,18 @@
 \alias{check_camera_drift}
 \title{Generates diagnostic table assessing drift of HD CBASS cameras}
 \usage{
-check_camera_drift(CBASS_dir, camera_folder_name = "blackfly",
-  table_name = "", vid_length = 1, has_colnames = TRUE,
-  fixed_tables_dir = NULL, fixed_tables = NULL, max_diff_thresh = 2,
-  Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe")
+check_camera_drift(
+  CBASS_dir,
+  camera_folder_name = "blackfly",
+  table_name = "",
+  vid_length = 1,
+  has_colnames = TRUE,
+  fixed_tables_dir = NULL,
+  fixed_tables = NULL,
+  max_diff_thresh = 2,
+ 
+    Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe"
+)
 }
 \arguments{
 \item{CBASS_dir}{directory of CBASS files}
