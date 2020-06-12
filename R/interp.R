@@ -6,6 +6,8 @@
 #' @export
 
 interp<- function(my_data, na.rm=FALSE){
+  if(sum(is.na(my_data))==length(my_data)){
+    return(my_data)} #If all NA's just return a vector of NA's
   new_data <- my_data
   idx_min <- min(which(!is.na(my_data))) #First non NA value (saves time b/c don't need to loop through a ton of leading NA's)
   idx <- which(is.na(my_data))
