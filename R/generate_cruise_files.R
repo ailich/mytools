@@ -73,7 +73,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
     EK_pos$GPS_date=as.character(EK_pos$GPS_date)} #Format alt_pos source like EK
   #Read in Ship File
   lab_File_list<- list.files(Ship_dir, pattern = "Northstar-941X---GPVTG.*lab", full.names = TRUE)
-  Ship_File<- tibble(timestamp=NA, Ship_Speed_kph=NA)[0,] #Initialize Ship File dataframe
+  Ship_File<- Ship_File<- tibble(timestamp=as.POSIXct(as.character(), tz = "UTC"), Ship_Speed_kph=as.numeric()) #Initialize Ship File dataframe
   if(length(lab_File_list)>0){ #If .lab file(s) exist
     for (q in 1:length(lab_File_list)) {
       lab_File<- read_delim(lab_File_list[q], delim = " ", col_names = FALSE, col_types = list(.default=col_double()))
