@@ -26,7 +26,7 @@ reproject_align_raster<- function(rast, ref_rast=NULL, desired_origin, desired_r
   if(length(desired_res)==1){
     desired_res<- rep(desired_res,2)}
 
-  if(identical(crs(rast), desired_crs) & identical(origin(rast), desired_origin) & identical(desired_res, res(rast))){
+  if(identical(crs(rast), desired_crs) & all.equal(origin(rast), desired_origin) & identical(desired_res, res(rast))){
     message("raster was already aligned")
     return(rast)} #Raster already aligned
 
@@ -42,7 +42,7 @@ reproject_align_raster<- function(rast, ref_rast=NULL, desired_origin, desired_r
   new_xmax<- new_xmin+(n_cols*desired_res[1]) #Calculate new max x value for extent
   new_ymax<- new_ymin+(n_rows*desired_res[2]) #Calculate new max y value for extent
   rast_new_template<- raster(xmn=new_xmin, xmx =new_xmax,  ymn=new_ymin, ymx= new_ymax, res=desired_res, crs= desired_crs) #Create a blank template raster to fill with desired properties
-  if(!identical(desired_origin,origin(rast_new_template))){
+  if(!all.equal(desired_origin,origin(rast_new_template))){
     message("desired origin does not match output origin")
     stop()} #Throw error if origin doesn't match
   if(identical(crs(ref_rast),crs(rast))){
