@@ -48,7 +48,7 @@ reproject_align_raster<- function(rast, ref_rast=NULL, desired_origin, desired_r
   if(identical(crs(ref_rast),crs(rast))){
     rast_new<- raster::resample(x=rast, y=rast_new_template, method = method)} else{
       rast_new<- projectRaster(from=rast, to=rast_new_template, method = method)} #Use projectRaster if crs doesn't match and resample if they do
-  if(!identical(desired_origin,origin(rast_new))){
+  if(!all.equal(desired_origin,origin(rast_new))){
     message("desired origin does not match output origin")
     stop()} #Throw error if origin doesn't match
   return(rast_new)
