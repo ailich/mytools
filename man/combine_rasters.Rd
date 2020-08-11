@@ -12,7 +12,8 @@ combine_rasters(
   desired_crs,
   method = "bilinear",
   display_progress = TRUE,
-  normalize = FALSE
+  normalize = FALSE,
+  use_mean = FALSE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ combine_rasters(
 \item{display_progress}{Logical specifying whether or not to indicate progress}
 
 \item{normalize}{Logical (False by Default) indicating whether to z-score normalize raster layer before merge (Useful for merging backscatter)}
+
+\item{use_mean}{Logical (False by Default) indicating whether to take mean value of layers in overlapping area. If FALSE calls raster::merge. If TRUE calls raster::mosaic(fun=mean).}
 }
 \description{
 Combines multiple rasters into one by using merge after first reprojecting or resampling and aligning rasters by matching them up with a a specified origin, resolution, and coordinate reference system, or that of a reference raster.

@@ -27,5 +27,5 @@ reproject_align_raster(
 \item{method}{resampling method. Either "bilinear" for bilinear interpolation (the default), or "ngb" for using the nearest neighbor}
 }
 \description{
-Reprojects/resamples and aligns a raster by matching a raster a raster to a specified origin, resolution, and coordinate reference system, or that of a reference raster. Useful for preparing adjacent areas before using raster::merge.
+Reprojects/resamples and aligns a raster by matching a raster a raster to a specified origin, resolution, and coordinate reference system, or that of a reference raster. Useful for preparing adjacent areas before using raster::merge or raster::mosaic. Also, see documentation for mytools::combine_rasters.
 }
