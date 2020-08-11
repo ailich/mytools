@@ -1,6 +1,6 @@
 #' Reprojects/resamples and aligns a raster
 #'
-#' Reprojects/resamples and aligns a raster by matching a raster a raster to a specified origin, resolution, and coordinate reference system, or that of a reference raster. Useful for preparing adjacent areas before using raster::merge.
+#' Reprojects/resamples and aligns a raster by matching a raster a raster to a specified origin, resolution, and coordinate reference system, or that of a reference raster. Useful for preparing adjacent areas before using raster::merge or raster::mosaic. Also, see documentation for mytools::combine_rasters.
 #' @param rast raster to be reprojected or resampled
 #' @param ref_rast reference raster with desired properties (Alternatively can supply desired_origin, desired_res, and desired_crs)
 #' @param desired_origin desired origin of output raster as a vector with length 2 (x,y)
@@ -45,7 +45,7 @@ reproject_align_raster<- function(rast, ref_rast=NULL, desired_origin, desired_r
   if(!isTRUE(all.equal(desired_origin,origin(rast_new_template)))){
     message("desired origin does not match output origin")
     stop()} #Throw error if origin doesn't match
-  if(identical(crs(ref_rast),crs(rast))){
+  if(identical(crs(rast),desired_crs)){
     rast_new<- raster::resample(x=rast, y=rast_new_template, method = method)} else{
       rast_new<- projectRaster(from=rast, to=rast_new_template, method = method)} #Use projectRaster if crs doesn't match and resample if they do
   if(!isTRUE(all.equal(desired_origin,origin(rast_new)))){
