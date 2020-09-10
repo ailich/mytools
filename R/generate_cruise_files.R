@@ -206,6 +206,7 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
       transect_df$CBASS_Pitch<- interp(transect_df$CBASS_Pitch, na.rm = TRUE) #interpolate to fill gaps
       transect_df$CBASS_Alt<- interp(transect_df$CBASS_Alt, na.rm = TRUE)
       transect_df$CBASS_Depth<- interp(transect_df$CBASS_Depth, na.rm = TRUE)
+      transect_df$Payout_m<- interp(transect_df$Payout_m, na.rm = TRUE) #interpolate to fill gaps
       transect_df$CBASS_Pitch[180]<- NA #Preserve 3 min buffer (filled by interp)
       transect_df$CBASS_Alt[180]<- NA
       transect_df$CBASS_Depth[180]<- NA
