@@ -38,7 +38,7 @@ reproject_align_raster<- function(rast, ref_rast=NULL, desired_origin, desired_r
   var2<- floor((rast_orig_extent@ymin - desired_origin[2])/desired_res[2])
   new_ymin<-desired_origin[2]+ desired_res[2]*var2 #Calculate new minimum y value for extent
   n_cols<- ceiling((rast_orig_extent@xmax-new_xmin)/desired_res[1]) #number of cols to be in output raster
-  n_rows<- ceiling((rast_orig_extent@ymax-new_ymin)/desired_res[2]) #number of cols to be in output raster
+  n_rows<- ceiling((rast_orig_extent@ymax-new_ymin)/desired_res[2]) #number of rows to be in output raster
   new_xmax<- new_xmin+(n_cols*desired_res[1]) #Calculate new max x value for extent
   new_ymax<- new_ymin+(n_rows*desired_res[2]) #Calculate new max y value for extent
   rast_new_template<- raster(xmn=new_xmin, xmx =new_xmax,  ymn=new_ymin, ymx= new_ymax, res=desired_res, crs= desired_crs) #Create a blank template raster to fill with desired properties
