@@ -7,7 +7,7 @@
 video_info(
   vid_path,
  
-    Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe"
+    Media_Info_Path = "C:/Users/socce/OneDrive - University of South Florida/ODB_Documents/Grad School/Software/Media_Info/MediaInfo.exe"
 )
 }
 \arguments{

@@ -33,7 +33,7 @@
 #' @importFrom lubridate dmicroseconds
 #' @export
 #'
-check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_name= "", vid_length=1, has_colnames= TRUE, fixed_tables_dir= NULL,fixed_tables=NULL, max_diff_thresh = 2, Media_Info_Path = "C:/Users/socce/Documents/Grad School/Software/Media_Info/MediaInfo.exe"){
+check_camera_drift<- function(CBASS_dir, camera_folder_name= "blackfly", table_name= "", vid_length=1, has_colnames= TRUE, fixed_tables_dir= NULL,fixed_tables=NULL, max_diff_thresh = 2, Media_Info_Path = "C:/Users/socce/OneDrive - University of South Florida/ODB_Documents/Grad School/Software/Media_Info/MediaInfo.exe"){
 
   warn_behavior<- getOption("warn")
   options(warn=1) #Print warnings as they happen

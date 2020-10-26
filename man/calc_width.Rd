@@ -4,7 +4,7 @@
 \alias{calc_width}
 \title{Calculates width of video frame}
 \usage{
-calc_width(alt, pitch, cam_angle = 32.8, HFOV_air = 82.4)
+calc_width(alt, pitch, cam_angle = 32.8, H_AFOV_air = 82.4)
 }
 \arguments{
 \item{alt}{altitude}
@@ -13,7 +13,7 @@ calc_width(alt, pitch, cam_angle = 32.8, HFOV_air = 82.4)
 
 \item{cam_angle}{camera angle in degrees (as measured down from the horizontal)}
 
-\item{HFOV_air}{HFOV in air for given camera in degrees}
+\item{H_AFOV_air}{Horizontal angular field of view in air in degrees for the camera system (depends on lens and image sensor size)}
 }
 \description{
 Calculates width of video frame in meters (Grasty 2014)

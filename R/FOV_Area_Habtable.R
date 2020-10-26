@@ -7,11 +7,11 @@
 #' @param all_timestamps vector of timestamps from Master 1Hz that corresponding to alt, pitch, and speed
 #' @param hab_timestamps vector of timestamps of habitat frames
 #' @param cam_angle camera angle in degrees
-#' @param HFOV_air HFOV in air for given camera (default is that of blackfly camera)
+#' @param H_AFOV_air Horizontal angular field of view in air in degrees for the camera system (depends on lens and image sensor size)
 #' @param bin_size bin size in seconds (if not specified will be calculated)
 #' @param use_median Use median instead of mean for alt, pitch, and speed respectively
 #' @export
-FOV_Area_Habtable<- function(hab_timestamps, all_timestamps, alt, pitch, speed, cam_angle=32.8, HFOV_air= 82.4, bin_size=NULL, use_median=c(FALSE, FALSE, FALSE)){
+AFOV_Area_Habtable<- function(hab_timestamps, all_timestamps, alt, pitch, speed, cam_angle=32.8, H_AFOV_air, bin_size=NULL, use_median=c(FALSE, FALSE, FALSE)){
   area<- rep(NA_real_, length(hab_timestamps)) #Dimension Variable
   for (i in 2:(length(hab_timestamps)-1)) {
     mid_time<- hab_timestamps[i]
