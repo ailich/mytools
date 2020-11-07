@@ -1,12 +1,15 @@
 #' Extracts relevant window from raster based on position of central pixel and window size
 #'
 #' @param r a raster
-#' @param w A vector of length 2 specifying the dimensions of the rectangular window to use where the first number is the number of rows and the second number is the number of columns. Window size must be an odd number.
+#' @param w A vector of length 2 specifying the dimensions of the rectangular window to use where the first number is the number of rows and the second number is the number of columns. Window size must be an odd number. If a single value is supplied it will be used for both the number of rows and columns.
 #' @param idx  A vector of length 2 representing the row and column position of the central pixel of the window you wish to extract from raster r
 #' @return A matrix containg the extracted window around the central pixel from raster r
 #' @export
 
 extract_window<- function(r, w=c(3,3), idx){
+  if(length(w)==1){
+    w<- rep(w,2)
+    }
   rast_row<- idx[1]
   rast_col<-idx[2]
   r_idx<- matrix(data= rep(1:w[1], each= w[2]), nrow = w[1], ncol=w[2], byrow=TRUE)
