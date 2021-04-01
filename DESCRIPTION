@@ -1,6 +1,6 @@
 Package: mytools
 Title: Stuff
-Version: 0.3
+Version: 0.31
 Authors@R: person("Alex", "Ilich", email = "ailich@mail.usf.edu", role = c("aut", "cre"))
 Description: Things.
 Depends: R (>= 3.4.1)
