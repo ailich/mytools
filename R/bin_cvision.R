@@ -23,17 +23,16 @@ bin_cvision<-function(merged_cvision_csv, start_vid, end_vid, bin_size=15, vid_l
   for (i in 1:vid_samp) {
     bin_labels[i]<- bin_size*(i-1)
   }
-  new_df<- matrix(nrow = vid_samp*n_videos, ncol=length(fish_names)+2) %>% as_tibble() #Species by Site Matrix
-  names(new_df)<- c("Video", "Seconds", fish_names)
+  new_df<- matrix(data = NA_integer_, nrow = vid_samp*n_videos, ncol=length(fish_names)+2, dimnames = list(c(),c("Video", "Seconds", fish_names))) %>% as_tibble() #Species by Site Matrix
   new_df$Video<- as.vector(sapply(start_vid:end_vid, rep, vid_samp))
-  new_df$Seconds<- bin_labels
+  new_df$Seconds<- rep(bin_labels, nrow(new_df)/length(bin_labels))
   bin_ranges<-tibble(lower=bin_labels, upper=bin_labels+bin_size)
   merged_cvision_csv$bin<- NA #Add a bin column
   for (i in 1:nrow(merged_cvision_csv)) {
     idx<-merged_cvision_csv$Time_In_Video[i]>=bin_ranges$lower & merged_cvision_csv$Time_In_Video[i]<bin_ranges$upper
     merged_cvision_csv$bin[i]<- bin_labels[idx]
   } #Place each observation in a bin
-  fish_counts<- merged_cvision_csv %>% group_by(video,bin) %>% count(Fish_Type)
+  fish_counts<- merged_cvision_csv %>% group_by(video,bin) %>% count(Fish_Type) %>% ungroup()
   for (i in 1:nrow(fish_counts)) {
     r_idx<- which(new_df$Video==fish_counts$video[i] & new_df$Seconds==fish_counts$bin[i]) #row index
     c_idx<- which(names(new_df)==fish_counts$Fish_Type[i]) #Col index

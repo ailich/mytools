@@ -1,6 +1,6 @@
 Package: mytools
 Title: Stuff
-Version: 0.31
+Version: 0.32
 Authors@R: person("Alex", "Ilich", email = "ailich@mail.usf.edu", role = c("aut", "cre"))
 Description: Things.
 Depends: R (>= 3.4.1)
@@ -24,7 +24,6 @@ Imports:
     RMariaDB,
     RPyGeo,
     RQGIS3 (>= 1.0.1.9000),
-    XML (>= 4.0.0)
+    XML
 Remotes: 
-    omegahat/XML,
     jannes-m/RQGIS3
