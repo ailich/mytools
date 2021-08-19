@@ -10,19 +10,20 @@
 #' @import readr
 
 merge_cvision_csv<- function(file_list=list.files(pattern = "\\.csv$"), frames_per_sec, vid_length){
-  fish<- tibble("Trip_ID" =NA_integer_, "Tow_Number"= NA_integer_, "Reviewer"=NA_character_, "Tow_Type"=NA_character_, "Fish_Number"=NA_integer_, "Fish_Type"=NA_character_, "Species"=NA_character_, "Frame"=NA_integer_, "Time_In_Video"=NA_real_, file_name=NA_character_) #Initialize accumulator
+  fish<- tibble("Trip_ID" = integer(), "Tow_Number"= integer(), "Reviewer"=character(), "Tow_Type"=character(), "Fish_Number"=integer(), "Fish_Type"=character(), "Species"=character(), "Frame"=integer(), "Time_In_Video"=numeric(), file_name=character()) #Initialize accumulator
   n_files<- length(file_list) #length of file_list
   if(n_files==0){
     warning("No annotation files: returning NULL")
     return(NULL)
   }
   for (i in 1:length(file_list)){
-    new_fish<- suppressWarnings(suppressMessages(read_csv(file = file_list[i],col_types=cols(.default="c", Trip_ID="i", Tow_Number="i", Fish_Number="i", Frame="i", Time_In_Video="d"))))
-    new_fish<- new_fish[,1:9]
-    if(!identical(names(new_fish), c("Trip_ID", "Tow_Number", "Reviewer", "Tow_Type", "Fish_Number", "Fish_Type", "Species", "Frame", "Time_In_Video"))){
+    col_names<- c(names(suppressWarnings(suppressMessages(read_csv(file_list[i], n_max=0)))), "Count_Label")
+    if(!identical(col_names, c("Trip_ID", "Tow_Number", "Reviewer", "Tow_Type", "Fish_Number", "Fish_Type", "Species", "Frame", "Time_In_Video", "Count_Label"))){
       message(paste("Columns of file",  file_list[i], "not as expected. Skipping", basename(file_list[i])))
       n_files<- n_files-1 #reduce length by one
       next()} #Skip file if col names not as expected
+    new_fish<- read_csv(file = file_list[i], col_types = "iicciccidc", col_names = col_names, skip=1)
+    new_fish<- new_fish[,1:9] #Keep subsetting for now since we don't use count label column and removing this line would lead to different results
     new_fish<- new_fish %>% mutate(file_name= file_list[i])
     fish<- bind_rows(fish,new_fish)
     rm(i,new_fish)
@@ -35,7 +36,6 @@ merge_cvision_csv<- function(file_list=list.files(pattern = "\\.csv$"), frames_p
     message("Error: Number of annotation files is somehow negative")
     stop() #Must be error in function code if this happens
   }
-  fish<- fish[-1,] #Remove first row of NA's
   if(max(fish$Time_In_Video) > (vid_length*60)){
     message("Error: Time in Video Greater than Video Length")
     stop()}
