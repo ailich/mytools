@@ -27,7 +27,7 @@ generate_cruise_files(
 
 \item{CBASS_dir}{Directory of CBASS transects}
 
-\item{Ship_dir}{Directory containing "Northstar-941X---GPVTG" file(s) (.lab or .Raw)}
+\item{Ship_dir}{Directory containing "Northstar-941X---GPVTG" file(s) (.lab, .aco, or .Raw)}
 
 \item{winch_dir}{Directory of winch data or path to Alex #2's payout tsv files}
 
@@ -45,7 +45,7 @@ generate_cruise_files(
 
 \item{CBASS_transect_subdir}{Name of sub_dir for CBASS transect. Only use if you want to generate files for just one transect.}
 
-\item{alt_pos}{alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab" and Northstar-941X---GGA_*.Raw are supported}
+\item{alt_pos}{File, vector of file names, or directory containing alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab", "Northstar-941X---GGA.aco", and Northstar-941X---GGA_*.Raw are supported. If a directory is supplied lab files will be preferentially used, then aco, then Raw.}
 }
 \description{
 Generates 1Hz tables for all transects within a cruise (Ship Speed, Ship position, CBASS layback, CBASS depth, CBASS altitude, CBASS Pitch, CBASS Position) as well as diagnostic plots. Can also be used to generate this for a specific transect rather than full cruise using "CBASS_transect_name" and "CBASS_transect_subdir" arguments. Will also output a file "messages.txt" that logs inputs/warnings/errors. Note: If there is an error and you cannot delete "messages.txt" you may need to run "closeAllConnections()"

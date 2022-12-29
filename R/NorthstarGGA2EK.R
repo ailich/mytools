@@ -1,5 +1,5 @@
 #' Reformat postion from Northstar-941X--GGA.lab files to look like those from an EK cruise track csv
-#' @param file_name path to Northstar-941X--GGA.lab file or Northstar-941X---GGA_*.Raw
+#' @param file_name path to Northstar-941X--GGA.lab or Northstar-941X--GGA.aco file or Northstar-941X---GGA_*.Raw
 #' @import dplyr
 #' @importFrom readr read_delim
 #' @importFrom lubridate ymd
@@ -9,9 +9,11 @@
 #' @importFrom readr col_character
 
 NorthstarGGA2EK<-function(file_name){
-  if(basename(file_name)=="Northstar-941X---GGA.lab"){
+  if(basename(file_name)=="Northstar-941X---GGA.lab" | basename(file_name)=="Northstar-941X---GGA.aco"){
+    if(basename(file_name)=="Northstar-941X---GGA.lab"){delim<- " "}
+    if(basename(file_name)=="Northstar-941X---GGA.aco"){delim<- ","}
     col_types<- paste0(strrep("d", 6), "c", strrep("d", 6), "c")
-    GGA<- readr::read_delim(file_name, delim = " ", col_names = FALSE, col_types = col_types)
+    GGA<- readr::read_delim(file_name, delim = delim, col_names = FALSE, col_types = col_types)
     names(GGA)[c(1,3, 4, 9, 10)] <- c("Year", "Day", "Decimal_Day", "Latitude", "Longitude")
     GGA<- GGA[,!grepl(pattern = "X\\d", names(GGA))]
     GGA<- GGA %>% mutate(time_origin= lubridate::ymd(paste(as.character(Year), "-1-1")))

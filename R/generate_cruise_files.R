@@ -4,7 +4,7 @@
 #' @param output_dir Directory to output files to
 #' @param EK_dir Directory of Ek Ship track file(s). Shiptrack files must be the only files in that directory that end in ".gps.csv"
 #' @param CBASS_dir Directory of CBASS transects
-#' @param Ship_dir Directory containing "Northstar-941X---GPVTG" file(s) (.lab or .Raw)
+#' @param Ship_dir Directory containing "Northstar-941X---GPVTG" file(s) (.lab, .aco, or .Raw)
 #' @param winch_dir Directory of winch data or path to Alex #2's payout tsv files
 #' @param altimeter_file name of altimeter files in CBASS directory. Default is "altimeter_readings.tsv" (only change if there is a default in original data table)
 #' @param ctd_file name of ctd files under CBASS directory. Default is "ctd_readings.tsv" (only change if there is a mistake in default data table)
@@ -13,7 +13,7 @@
 #' @param GPS_Source Adds offset forward/aft offset between trawl block and GPS source. Must be "None", "CoG" (Center of Gravity), "Furuno" or "Northstar". Default is CoG.
 #' @param CBASS_transect_name Name of CBASS transect. Only use if you want to generate files for just one transect.
 #' @param CBASS_transect_subdir Name of sub_dir for CBASS transect. Only use if you want to generate files for just one transect.
-#' @param alt_pos alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab" and Northstar-941X---GGA_*.Raw are supported
+#' @param alt_pos File, vector of file names, or directory containing alternative positioning source (instead of EK). Currently only files with a basename of "Northstar-941X---GGA.lab", "Northstar-941X---GGA.aco", and Northstar-941X---GGA_*.Raw are supported. If a directory is supplied lab files will be preferentially used, then aco, then Raw.
 #' @importFrom lubridate mdy_hms
 #' @importFrom lubridate ymd_hms
 #' @importFrom lubridate round_date
@@ -23,6 +23,7 @@
 #' @importFrom lubridate dmilliseconds
 #' @importFrom lubridate dmicroseconds
 #' @importFrom lubridate date
+#' @importFrom lubridate with_tz
 #' @import dplyr
 #' @import readr
 #' @import ggplot2
@@ -69,22 +70,43 @@ generate_cruise_files<- function(output_dir,EK_dir,CBASS_dir, Ship_dir, winch_di
         EK_pos<- EK_pos %>% bind_rows(curr_cruise_track)
       }}}
   if(alt_pos!=""){
-    EK_pos<- mytools:::NorthstarGGA2EK(alt_pos)
+    if(dir.exists(alt_pos)){ #if alt_pos is a directory rather than a file
+      alt_pos2<- list.files(alt_pos, full.names = TRUE, pattern = "GGA.*\\.lab$")
+      if(length(alt_pos2)==0){
+        alt_pos2<- list.files(alt_pos, full.names = TRUE, pattern = "GGA.*\\.aco$")
+      }
+      if(length(alt_pos2)==0){
+        alt_pos2<- list.files(alt_pos, full.names = TRUE, pattern = "GGA.*\\.Raw$")
+      }
+      alt_pos<- alt_pos2
+      }
+      EK_pos<- mytools:::NorthstarGGA2EK(alt_pos[1])
+      if(length(alt_pos)>1){
+        for (s in 2:length(alt_pos)){
+          EK_pos<- bind_rows(EK_pos, mytools:::NorthstarGGA2EK(alt_pos[s]))
+        }
+      }
     EK_pos$GPS_date=as.character(EK_pos$GPS_date)} #Format alt_pos source like EK
+
   #Read in Ship File
-  lab_File_list<- list.files(Ship_dir, pattern = "Northstar-941X---GPVTG.*lab", full.names = TRUE)
+  GPVTG_File_list<- list.files(Ship_dir, pattern = "Northstar-941X---GPVTG.*lab", full.names = TRUE)
+  GPVTG_delim<- " "
+  if(length(GPVTG_File_list)==0){
+    GPVTG_File_list<- list.files(Ship_dir, pattern = "Northstar-941X---GPVTG.*aco", full.names = TRUE)
+    GPVTG_delim<- ","
+    } #if no lab files use aco files
   Ship_File<- Ship_File<- tibble(timestamp=as.POSIXct(as.character(), tz = "UTC"), Ship_Speed_kph=as.numeric()) #Initialize Ship File dataframe
-  if(length(lab_File_list)>0){ #If .lab file(s) exist
-    for (q in 1:length(lab_File_list)) {
-      lab_File<- read_delim(lab_File_list[q], delim = " ", col_names = FALSE, col_types = list(.default=col_double()))
-      names(lab_File)[c(1,3,4,7)]<- c("Year", "Julian_Day", "Decimal_Day", "Ship_Speed_kph")
-      lab_File<- lab_File %>% mutate(Seconds_In_Day = round((Decimal_Day * 24 *60 * 60),0))
-      lab_File<- lab_File %>% mutate(time_origin = lubridate:: mdy_hms(paste0("1-1-",as.character(Year),"-00:00:00"))) #Time orgin for Julian Day
-      lab_File<- lab_File %>% mutate(timestamp = time_origin+lubridate::ddays(Julian_Day-1)+lubridate::dseconds(Seconds_In_Day))
-      lab_File<- lab_File %>% select(timestamp, Ship_Speed_kph)
-      Ship_File<- bind_rows(Ship_File, lab_File)
+  if(length(GPVTG_File_list)>0){ #If GPVTG file(s) exist
+    for (q in 1:length(GPVTG_File_list)) {
+      GPVTG_File<- read_delim(GPVTG_File_list[q], delim = GPVTG_delim, col_names = FALSE, col_types = list(.default=col_double()))
+      names(GPVTG_File)[c(1,3,4,7)]<- c("Year", "Julian_Day", "Decimal_Day", "Ship_Speed_kph")
+      GPVTG_File<- GPVTG_File %>% mutate(Seconds_In_Day = round((Decimal_Day * 24 *60 * 60),0))
+      GPVTG_File<- GPVTG_File %>% mutate(time_origin = lubridate:: mdy_hms(paste0("1-1-",as.character(Year),"-00:00:00"))) #Time orgin for Julian Day
+      GPVTG_File<- GPVTG_File %>% mutate(timestamp = time_origin+lubridate::ddays(Julian_Day-1)+lubridate::dseconds(Seconds_In_Day))
+      GPVTG_File<- GPVTG_File %>% select(timestamp, Ship_Speed_kph)
+      Ship_File<- bind_rows(Ship_File, GPVTG_File)
     }}
-  if(length(lab_File_list)==0){
+  if(length(GPVTG_File_list)==0){
     Raw_File_list<- list.files(Ship_dir, pattern = "Northstar-941X---GPVTG.*Raw", full.names = TRUE)
     for (p in 1:length(Raw_File_list)) {
       Raw_File<- read_csv(Raw_File_list[p], col_names = FALSE, col_types = list(.default = col_character()))
